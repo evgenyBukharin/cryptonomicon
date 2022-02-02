@@ -157,7 +157,7 @@
                             type="button"
                             class="btn btn-primary"
                             data-bs-dismiss="modal"
-                            @click="addWalletDependency()"
+                            @click="addWalletDependency"
                         >
                             Добавить
                         </button>
@@ -239,15 +239,9 @@ export default {
                 return ((value - minValue) * 95) / (maxValue - minValue) + 5;
             });
         },
-        // addWalletDependency() {
-        //     const myModal = new Modal(document.getElementById("modal"));
-        //     myModal.hide();
-        //     console.log(myModal);
-        // },
-        // closeModal() {
-        //     const myModal = new Modal(document.getElementById("modal"));
-        //     myModal.hide();
-        // },
+        addWalletDependency() {
+            this.walletList.push(this.newDependencyWallet);
+        },
     },
 };
 </script>
@@ -255,39 +249,6 @@ export default {
 <style lang="scss">
 @import "~bootstrap/dist/css/bootstrap.css";
 
-// $utilities: map-merge(
-//     $utilities,
-//     (
-//         "width":
-//             map-merge(
-//                 map-get($utilities, "width"),
-//                 (
-//                     values:
-//                         map-merge(
-//                             map-get(map-get($utilities, "width"), "values"),
-//                             (
-//                                 5: 5%,
-//                                 10: 10%,
-//                                 15: 15%,
-//                                 20: 20%,
-//                                 30: 30%,
-//                                 35: 35%,
-//                                 40: 40%,
-//                                 45: 45%,
-//                                 55: 55%,
-//                                 60: 60%,
-//                                 65: 65%,
-//                                 70: 70%,
-//                                 80: 80%,
-//                                 85: 85%,
-//                                 90: 90%,
-//                                 95: 95%,
-//                             )
-//                         ),
-//                 )
-//             ),
-//     )
-// );
 .cursor-pointer {
     cursor: pointer;
 }
