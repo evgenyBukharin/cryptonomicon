@@ -48,7 +48,7 @@
             <div
                 class="p-10 cursor-pointer"
                 data-bs-toggle="modal"
-                data-bs-target="#modal"
+                data-bs-target="#exampleModal"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -114,65 +114,39 @@
                 @click="closeGraph"
             />
         </div>
-        <!-- <hr class="mt-1" v-show="selectedTicker !== null" /> -->
-        <div class="modal fade" id="modal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header border-0">
-                        <h5 class="modal-title" id="exampleModalLabel">
-                            Добавить валюту в список
-                        </h5>
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Закрыть"
-                        ></button>
-                    </div>
-                    <div class="modal-body pt-0 pb-0">
-                        <form>
-                            <div class="mb-3">
-                                <!-- <label for="recipient-name" class="col-form-label"
-                                >Получатель:</label
-                            > -->
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="recipient-name"
-                                    placeholder="Введите наименование валюты..."
-                                    v-model="newDependencyWallet"
-                                />
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                        >
-                            Закрыть
-                        </button>
-                        <button
-                            type="button"
-                            class="btn btn-primary"
-                            data-bs-dismiss="modal"
-                            @click="addWalletDependency"
-                        >
-                            Добавить
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
+    <!-- <hr class="mt-1" v-show="selectedTicker !== null" /> -->
+    <!-- Модальное окно -->
+    <modal-app
+        ><template v-slot:modal__content>
+            <input
+                type="text"
+                class="form-control"
+                id="recipient-name"
+                placeholder="Введите название валюты..."
+                v-model="newDependencyWallet"
+            />
+        </template>
+        ><template v-slot:modal__actionBtc>
+            <button
+                type="button"
+                class="btn btn-primary"
+                @click="addWalletDependency()"
+                data-bs-dismiss="modal"
+            >
+                Добавить
+            </button>
+        </template>
+    </modal-app>
 </template>
 
 <script>
 import headerApp from "./components/headerApp.vue";
+import modalApp from "./components/modalApp.vue";
+import "bootstrap";
 export default {
     name: "App",
-    components: { headerApp },
+    components: { headerApp, modalApp },
     data() {
         return {
             ticker: "",
