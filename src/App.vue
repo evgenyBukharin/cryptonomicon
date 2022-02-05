@@ -207,14 +207,26 @@ export default {
             }
         },
         normalizeGraph() {
-            const maxValue = Math.max(...this.graph);
-            const minValue = Math.min(...this.graph);
+            // const maxValue = Math.max(...this.graph);
+            // const minValue = Math.min(...this.graph);
             return this.graph.map((value) => {
-                return ((value - minValue) * 95) / (maxValue - minValue) + 5;
+                return (
+                    ((value - this.minValue) * 95) /
+                        (this.maxValue - this.minValue) +
+                    5
+                );
             });
         },
         addWalletDependency() {
             this.walletList.push(this.newDependencyWallet);
+        },
+    },
+    computed: {
+        minValue() {
+            return Math.min(...this.graph);
+        },
+        maxValue() {
+            return Math.max(...this.graph);
         },
     },
 };
@@ -232,13 +244,17 @@ export default {
 .graph {
     height: 500px;
 }
-.w-15 {
-    width: 15%;
+.w {
+    &-15 {
+        width: 15%;
+    }
+    &-40 {
+        width: 40%;
+    }
 }
-.w-40 {
-    width: 40%;
-}
-.p-10 {
-    padding: 10px;
+.p {
+    &-10 {
+        padding: 10px;
+    }
 }
 </style>
