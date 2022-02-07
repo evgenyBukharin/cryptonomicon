@@ -14,16 +14,15 @@
 
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a href="#" class="nav-link active" aria-current="page">Home</a>
+                <router-link class="nav-link active me-2" to="/"
+                    >На главную</router-link
+                >
             </li>
             <li class="nav-item">
-                <a href="#" class="nav-link">Features</a>
+                <router-link class="nav-link active" to="/test"
+                    >Страница</router-link
+                >
             </li>
-            <li class="nav-item">
-                <a href="#" class="nav-link">Pricing</a>
-            </li>
-            <li class="nav-item"><a href="#" class="nav-link">FAQs</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">About</a></li>
         </ul>
     </header>
 </template>
