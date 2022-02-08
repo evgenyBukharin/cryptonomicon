@@ -9,7 +9,7 @@
             <svg class="bi me-2" width="40" height="32">
                 <use xlink:href="#bootstrap"></use>
             </svg>
-            <span class="fs-4">Simple header</span>
+            <span class="fs-3">Cryptonomicon</span>
         </a>
 
         <ul class="nav nav-pills">
@@ -19,8 +19,13 @@
                 >
             </li>
             <li class="nav-item">
-                <router-link class="nav-link active" to="/test"
-                    >Страница</router-link
+                <router-link class="nav-link active me-2" to="/topList"
+                    >Топ-лист</router-link
+                >
+            </li>
+            <li class="nav-item">
+                <router-link class="nav-link active" to="/news"
+                    >Новости</router-link
                 >
             </li>
         </ul>

@@ -1,30 +1,35 @@
-<template lang="">
+<template>
     <add-ticker @add-ticker="add" />
     <hr class="mb-3 mt-3" />
-    <div class="container d-flex flex-wrap mt-2">
-        <div
-            v-for="(t, i) in tickers"
-            :key="i"
-            class="card mt-3 mb-3 w-25 border-4"
-            :class="{
-                'border-secondary': selectedTicker == t,
-            }"
-            @click="selectTicker(t)"
-        >
-            <div class="card-body d-flex flex-column">
-                <h3 class="card-title text-center">
-                    {{ t.name }} - {{ t.dependence }}
-                </h3>
-                <h4 class="card-title text-center">{{ t.price }}</h4>
-                <button @click.stop="deleteTicker(t)" class="btn btn-secondary">
-                    Удалить
-                </button>
+    <div class="container">
+        <div class="row row-cols-4 g-3">
+            <div class="col" v-for="(t, i) in tickers" :key="i">
+                <div
+                    class="card border-4"
+                    :class="{
+                        'border-secondary': selectedTicker == t,
+                    }"
+                    @click="selectTicker(t)"
+                >
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="card-title text-center">
+                            {{ t.name }} - {{ t.dependence }}
+                        </h3>
+                        <h4 class="card-title text-center">{{ t.price }}</h4>
+                        <button
+                            @click.stop="deleteTicker(t)"
+                            class="btn btn-secondary"
+                        >
+                            Удалить
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div
         v-if="selectedTicker !== null"
-        class="graph position-relative mt-2 w-100 border border-2 border-primary border-top-0 border-end-0 d-flex align-items-end"
+        class="graph position-relative mt-4 w-100 border border-2 border-primary border-top-0 border-end-0 d-flex align-items-end"
     >
         <span
             v-for="(graphSel, i) in normalizeGraph()"
