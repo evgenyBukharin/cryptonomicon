@@ -173,6 +173,9 @@ export default {
     &-15 {
         width: 15%;
     }
+    &-30 {
+        width: 30%;
+    }
     &-40 {
         width: 40%;
     }
