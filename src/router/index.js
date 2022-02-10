@@ -5,6 +5,7 @@ import {
 import Home from '../pages/Home.vue'
 import TopList from '../pages/TopList.vue'
 import News from '../pages/News.vue'
+import WalletDetails from '../pages/WalletDetails.vue'
 
 const routes = [{
         path: '/',
@@ -17,10 +18,15 @@ const routes = [{
         component: TopList,
     },
     {
+        path: '/wallet/:walletName',
+        name: 'wallet',
+        component: WalletDetails,
+    },
+    {
         path: '/News',
         name: 'News',
         component: News,
-    }
+    },
 ]
 
 const router = createRouter({

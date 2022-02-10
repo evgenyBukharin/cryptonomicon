@@ -1,0 +1,13 @@
+// Обязательные
+@import "../node_modules/bootstrap/scss/functions";
+
+// Переопределения переменных по умолчанию
+$nav-link-color: rgba(0, 0, 0, 0.8);
+$nav-link-hover-color: #0d6efd;
+$nav-tabs-link-hover-border-color: #0d6efd;
+$nav-tabs-link-active-color: #0d6efd;
+
+
+// Обязательные
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";

@@ -33,7 +33,7 @@
     </div>
     <div
         v-if="selectedTicker !== null"
-        class="graph position-relative mt-4 w-100 border border-2 border-primary border-top-0 border-end-0 d-flex align-items-end"
+        class="graph position-relative mt-3 mb-3 w-100 border border-2 border-primary border-top-0 border-end-0 d-flex align-items-end"
     >
         <span
             v-for="(graphSel, i) in normalizeGraph()"
@@ -133,7 +133,7 @@ export default {
         subscribeOnUpdates(ticker) {
             let intervalId = setInterval(async () => {
                 const func = await fetch(
-                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=d2ac9f63650167356ed7273d10fa3866a960fae32f9190637808fc0b8da7db48} `
+                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
                 );
                 const data = await func.json();
                 if (data.Response == "Error") {
@@ -225,7 +225,6 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "bootstrap";
 .cursor-pointer {
     cursor: pointer;
 }

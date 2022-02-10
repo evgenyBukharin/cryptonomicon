@@ -76,7 +76,7 @@ export default {
     methods: {
         async getData() {
             const func = await fetch(
-                `https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=USD&`
+                `https://min-api.cryptocompare.com/data/top/totalvolfull?limit=10&tsym=USD&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
             );
             const data = await func.json();
             if (data.Message == "Success") {
