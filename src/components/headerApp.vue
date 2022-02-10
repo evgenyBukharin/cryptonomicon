@@ -11,22 +11,19 @@
             </svg>
             <span class="fs-3">Cryptonomicon</span>
         </a>
-
-        <ul class="nav nav-pills">
+        <ul class="nav nav-tabs fs-4">
             <li class="nav-item">
-                <router-link class="nav-link active me-2" to="/"
+                <router-link class="nav-link" aria-current="page" to="/"
                     >На главную</router-link
                 >
             </li>
             <li class="nav-item">
-                <router-link class="nav-link active me-2" to="/topList"
+                <router-link class="nav-link" to="/topList"
                     >Топ-лист</router-link
                 >
             </li>
             <li class="nav-item">
-                <router-link class="nav-link active" to="/news"
-                    >Новости</router-link
-                >
+                <router-link class="nav-link" to="/news">Новости</router-link>
             </li>
         </ul>
     </header>
@@ -34,4 +31,4 @@
 <script>
 export default {};
 </script>
-<style></style>
+<style lang="scss"></style>

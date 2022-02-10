@@ -7,7 +7,7 @@
                 <div
                     class="card border-4"
                     :class="{
-                        'border-secondary': selectedTicker == t,
+                        'border-primary': selectedTicker == t,
                     }"
                     @click="selectTicker(t)"
                 >
@@ -18,7 +18,11 @@
                         <h4 class="card-title text-center">{{ t.price }}</h4>
                         <button
                             @click.stop="deleteTicker(t)"
-                            class="btn btn-secondary"
+                            class="btn"
+                            :class="{
+                                'btn-primary': selectedTicker == t,
+                                'btn-secondary': selectedTicker !== t,
+                            }"
                         >
                             Удалить
                         </button>
@@ -37,9 +41,11 @@
             class="graph-elem bg-primary graphSel-width"
             :style="{ height: graphSel + '%' }"
             :value="this.graphData[i]"
-            @mouseover="createHover(this.graphData[i])"
-            @mouseout="(event) => holdHover(event)"
-            @mouseleave="deleteHover()"
+            @mouseover="
+                createHover(this.graphData[i], this.selectedTicker.dependence)
+            "
+            @mousemove="(event) => holdHover(event)"
+            @mouseleave="(event) => deleteHover(event)"
         ></span>
         <span
             v-show="graph.length < 10"
@@ -56,7 +62,6 @@
 </template>
 <script>
 import AddTicker from "../components/AddTicker.vue";
-import "bootstrap";
 export default {
     name: "App",
     components: { AddTicker },
@@ -66,7 +71,6 @@ export default {
             selectedTicker: null,
             graph: [],
             graphData: [],
-            newDependencyWallet: "",
         };
     },
     methods: {
@@ -158,7 +162,7 @@ export default {
             }, 2000);
             return intervalId;
         },
-        createHover(value) {
+        createHover(value, dep) {
             const hover = document.createElement("div");
             hover.classList.add(
                 "position-absolute",
@@ -166,19 +170,37 @@ export default {
                 "text-white",
                 "rounded-2",
                 "py-2",
-                "px-3"
+                "px-3",
+                "border",
+                "border-4",
+                "border-white"
             );
-            hover.innerHTML = value;
+            hover.innerHTML = value + " " + dep;
             hover.id = "hover";
             document.body.appendChild(hover);
         },
         holdHover(event) {
             const hover = document.getElementById("hover");
-            hover.style.right = event.pageX + 20;
-            hover.style.top = event.pageY + 20;
+            hover.style.left = event.pageX + 20 + "px";
+            hover.style.top = event.pageY - 40 + "px";
+            console.log(event.pageX, event.pageY);
+            event.target.classList.add(
+                "border",
+                "border-3",
+                "border-white",
+                "border-top-0",
+                "border-bot-0"
+            );
         },
-        deleteHover() {
+        deleteHover(event) {
             document.body.removeChild(document.querySelector("#hover"));
+            event.target.classList.remove(
+                "border",
+                "border-3",
+                "border-white",
+                "border-top-0",
+                "border-bot-0"
+            );
         },
     },
     computed: {
@@ -196,7 +218,6 @@ export default {
                 this.tickers.push(ticker);
             });
         }
-        console.log(this.tickers);
         this.tickers.forEach((t) => {
             this.subscribeOnUpdates(t);
         });
@@ -204,8 +225,7 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "~bootstrap/dist/css/bootstrap.css";
-
+@import "bootstrap";
 .cursor-pointer {
     cursor: pointer;
 }

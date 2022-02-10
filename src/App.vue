@@ -15,4 +15,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.nav-tabs .nav-item .router-link-active {
+    border: 1px solid #0d6efd !important;
+    color: #0d6efd !important;
+}
+.nav-link {
+    color: #6c757d !important;
+}
+</style>

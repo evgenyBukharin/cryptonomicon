@@ -51,27 +51,7 @@
             </button>
         </div>
     </div>
-    <Modal-app
-        ><template v-slot:modal__content>
-            <input
-                type="text"
-                class="form-control"
-                id="recipient-name"
-                placeholder="Введите название валюты..."
-                v-model="newDependencyWallet"
-            />
-        </template>
-        ><template v-slot:modal__actionBtc>
-            <button
-                type="button"
-                class="btn btn-primary"
-                @click="addWalletDependency()"
-                data-bs-dismiss="modal"
-            >
-                Добавить
-            </button>
-        </template>
-    </Modal-app>
+    <Modal-app @addDependencyWallet="addWalletDependency"></Modal-app>
 </template>
 <script>
 import AddButton from "./AddButton.vue";
@@ -131,8 +111,8 @@ export default {
                 }
             }
         },
-        addWalletDependency() {
-            this.walletList.push(this.newDependencyWallet);
+        addWalletDependency(newDependencyWallet) {
+            this.walletList.push(newDependencyWallet);
         },
     },
     created() {

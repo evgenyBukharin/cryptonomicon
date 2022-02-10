@@ -20,7 +20,13 @@
                     ></button>
                 </div>
                 <div class="modal-body">
-                    <slot name="modal__content"></slot>
+                    <input
+                        type="text"
+                        class="form-control"
+                        id="recipient-name"
+                        placeholder="Введите название валюты..."
+                        v-model="newDependencyWallet"
+                    />
                 </div>
                 <div class="modal-footer">
                     <button
@@ -30,13 +36,41 @@
                     >
                         Закрыть
                     </button>
-                    <slot name="modal__actionBtc"></slot>
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        @click="addWalletDependency()"
+                        data-bs-dismiss="modal"
+                    >
+                        Добавить
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-export default {};
+export default {
+    data() {
+        return {
+            newDependencyWallet: "",
+        };
+    },
+    emits: {
+        addDependencyWallet: (newDependencyWallet) => {
+            if (newDependencyWallet.lenght !== 0) {
+                return true;
+            } else {
+                console.warn("Пустую строку нельзя добавить");
+                return false;
+            }
+        },
+    },
+    methods: {
+        addWalletDependency() {
+            this.$emit("addDependencyWallet", this.newDependencyWallet);
+        },
+    },
+};
 </script>
 <style lang=""></style>
