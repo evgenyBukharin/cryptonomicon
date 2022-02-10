@@ -19,14 +19,6 @@
     </button>
 </template>
 <script>
-export default {
-    props: {
-        disabled: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-    },
-};
+export default {};
 </script>
 <style lang=""></style>

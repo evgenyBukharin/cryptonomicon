@@ -4,6 +4,7 @@
         <add-button @click="add" type="button" />
         <input
             v-model="ticker"
+            @input="findMatches()"
             @keydown.enter="add"
             type="text"
             class="form-control form-control-md w-40"
@@ -11,7 +12,7 @@
         />
         <select
             class="form-select form-select-lg w-15 ms-2"
-            v-model="tickerDepence"
+            v-model="tickerDependence"
         >
             <option value="USD" selected>USD</option>
             <option v-for="(wallet, i) in walletList" :key="i" :value="wallet">
@@ -40,30 +41,21 @@
             </svg>
         </div>
     </div>
-    <div class="row row-cols-4 gx-2 mt-3 w-30">
-        <!-- v-for в col -->
-        <div class="col">
+    <div class="d-flex mt-3 w-40">
+        <div class="me-3" v-for="(match, i) in walletMatches" :key="i">
             <button
-                class="btn btn-secondary text-white rounded-3 text-uppercase w-100"
+                class="btn btn-secondary text-white rounded-3 text-uppercase"
+                @click="addTicker(match)"
             >
-                btc
+                {{ match }}
             </button>
         </div>
     </div>
-    <!-- <pre>{{ allWallets }}</pre> -->
 </template>
 <script>
 import AddButton from "./AddButton.vue";
 export default {
     components: { AddButton },
-
-    props: {
-        disabled: {
-            type: Boolean,
-            required: false,
-            default: false,
-        },
-    },
 
     emits: {
         "add-ticker": (value) => typeof value === "string",
@@ -71,7 +63,7 @@ export default {
     data() {
         return {
             ticker: "",
-            tickerDepence: "USD",
+            tickerDependence: "USD",
             walletList: ["RUB", "EUR", "ETH"],
             walletMatches: [],
             allWallets: [],
@@ -82,106 +74,41 @@ export default {
             if (this.ticker.length === 0) {
                 return;
             }
-            this.$emit(
-                "add-ticker",
-                this.isRussian ? this.translit(this.ticker) : this.ticker,
-                this.tickerDepence
-            );
+            this.$emit("add-ticker", this.ticker, this.tickerDependence);
             this.ticker = "";
         },
-        translit(word) {
-            var answer = "";
-            var converter = {
-                а: "a",
-                б: "b",
-                в: "v",
-                г: "g",
-                д: "d",
-                е: "e",
-                ё: "e",
-                ж: "zh",
-                з: "z",
-                и: "i",
-                й: "y",
-                к: "k",
-                л: "l",
-                м: "m",
-                н: "n",
-                о: "o",
-                п: "p",
-                р: "r",
-                с: "s",
-                т: "t",
-                у: "u",
-                ф: "f",
-                х: "h",
-                ц: "c",
-                ч: "ch",
-                ш: "sh",
-                щ: "sch",
-                ь: "",
-                ы: "y",
-                ъ: "",
-                э: "e",
-                ю: "yu",
-                я: "ya",
-
-                А: "A",
-                Б: "B",
-                В: "V",
-                Г: "G",
-                Д: "D",
-                Е: "E",
-                Ё: "E",
-                Ж: "Zh",
-                З: "Z",
-                И: "I",
-                Й: "Y",
-                К: "K",
-                Л: "L",
-                М: "M",
-                Н: "N",
-                О: "O",
-                П: "P",
-                Р: "R",
-                С: "S",
-                Т: "T",
-                У: "U",
-                Ф: "F",
-                Х: "H",
-                Ц: "C",
-                Ч: "Ch",
-                Ш: "Sh",
-                Щ: "Sch",
-                Ь: "",
-                Ы: "Y",
-                Ъ: "",
-                Э: "E",
-                Ю: "Yu",
-                Я: "Ya",
-            };
-
-            for (var i = 0; i < word.length; ++i) {
-                if (converter[word[i]] == undefined) {
-                    answer += word[i];
-                } else {
-                    answer += converter[word[i]];
-                }
-            }
-
-            return answer;
+        addTicker(match) {
+            this.$emit("add-ticker", match, this.tickerDependence);
+            this.ticker = "";
         },
         async getAllWallets() {
             const func = await fetch(
-                `https://min-api.cryptocompare.com/data/all/coinlist`
+                `https://min-api.cryptocompare.com/data/all/coinlist?summary=true`
             );
             const data = await func.json();
-            this.allWallets = data.Data;
+            for (const coin in data.Data) {
+                if (Object.hasOwnProperty.call(data.Data, coin)) {
+                    // возможно нужно вместо data.Data[coin].Name использовать data.Data[coin].Symbol
+                    this.allWallets.push(data.Data[coin].Symbol);
+                }
+            }
         },
-    },
-    computed: {
-        isRussian() {
-            return /[а-я]/i.test(this.ticker);
+        findMatches() {
+            if (this.ticker.length == 0) {
+                this.walletMatches.length = 0;
+                return;
+            }
+            this.ticker = this.ticker.toUpperCase();
+            this.walletMatches.length = 0;
+            for (let i = 0; i < this.allWallets.length; i++) {
+                let foundIndex = this.allWallets[i].indexOf(this.ticker);
+                if (foundIndex !== -1) {
+                    this.walletMatches.push(this.allWallets[i]);
+                }
+                if (this.walletMatches.length == 4) {
+                    break;
+                }
+            }
         },
     },
     created() {
@@ -189,4 +116,4 @@ export default {
     },
 };
 </script>
-<style lang=""></style>
+<style lang="scss"></style>

@@ -36,6 +36,10 @@
             :key="i"
             class="graph-elem bg-primary graphSel-width"
             :style="{ height: graphSel + '%' }"
+            :value="this.graphData[i]"
+            @mouseover="createHover(this.graphData[i])"
+            @mouseout="(event) => holdHover(event)"
+            @mouseleave="deleteHover()"
         ></span>
         <span
             v-show="graph.length < 10"
@@ -83,15 +87,20 @@ export default {
             tickers: [],
             selectedTicker: null,
             graph: [],
+            graphData: [],
             newDependencyWallet: "",
         };
     },
     methods: {
-        add(ticker, tickerDepence) {
+        add(ticker, tickerDependence) {
+            // Проверка на существование тикера
+            if (this.alreadyExists(ticker)) {
+                return;
+            }
             const currentTicker = {
                 name: ticker,
                 price: "-",
-                dependence: tickerDepence,
+                dependence: tickerDependence,
             };
             this.tickers = [...this.tickers, currentTicker];
             let intervalId = setInterval(async () => {
@@ -99,6 +108,10 @@ export default {
                     `https://min-api.cryptocompare.com/data/price?fsym=${currentTicker.name}&tsyms=${currentTicker.dependence}&api_key=d2ac9f63650167356ed7273d10fa3866a960fae32f9190637808fc0b8da7db48} `
                 );
                 const data = await func.json();
+                if (data.Response == "Error") {
+                    clearInterval(intervalId);
+                    this.tickers.splice(this.tickers.indexOf(currentTicker), 1);
+                }
                 this.tickers.find(
                     (t) =>
                         t.name === currentTicker.name &&
@@ -135,6 +148,7 @@ export default {
             }
         },
         normalizeGraph() {
+            this.graphData = this.graph;
             return this.graph.map((value) => {
                 return (
                     ((value - this.minValue) * 95) /
@@ -145,6 +159,39 @@ export default {
         },
         addWalletDependency() {
             this.walletList.push(this.newDependencyWallet);
+        },
+        alreadyExists(ticker) {
+            let v = false;
+            this.tickers.forEach((t) => {
+                if (t.name == ticker) {
+                    v = true;
+                }
+            });
+            return v;
+        },
+        createHover(value) {
+            const hover = document.createElement("div");
+            hover.classList.add(
+                "position-absolute",
+                "bg-primary",
+                "text-white",
+                "rounded-2",
+                "py-2",
+                "px-3"
+            );
+
+            hover.innerHTML = value;
+            hover.id = "hover";
+            document.body.appendChild(hover);
+        },
+        holdHover(event) {
+            const hover = document.getElementById("hover");
+            console.log(hover);
+            hover.style.right = event.pageX + 20;
+            hover.style.top = event.pageY + 20;
+        },
+        deleteHover() {
+            document.body.removeChild(document.querySelector("#hover"));
         },
     },
     computed: {
