@@ -53,35 +53,13 @@
             @click="closeGraph"
         />
     </div>
-    <Modal-app
-        ><template v-slot:modal__content>
-            <input
-                type="text"
-                class="form-control"
-                id="recipient-name"
-                placeholder="Введите название валюты..."
-                v-model="newDependencyWallet"
-            />
-        </template>
-        ><template v-slot:modal__actionBtc>
-            <button
-                type="button"
-                class="btn btn-primary"
-                @click="addWalletDependency()"
-                data-bs-dismiss="modal"
-            >
-                Добавить
-            </button>
-        </template>
-    </Modal-app>
 </template>
 <script>
 import AddTicker from "../components/AddTicker.vue";
-import ModalApp from "../components/ModalApp.vue";
 import "bootstrap";
 export default {
     name: "App",
-    components: { AddTicker, ModalApp },
+    components: { AddTicker },
     data() {
         return {
             tickers: [],
@@ -103,39 +81,21 @@ export default {
                 dependence: tickerDependence,
             };
             this.tickers = [...this.tickers, currentTicker];
-            let intervalId = setInterval(async () => {
-                const func = await fetch(
-                    `https://min-api.cryptocompare.com/data/price?fsym=${currentTicker.name}&tsyms=${currentTicker.dependence}&api_key=d2ac9f63650167356ed7273d10fa3866a960fae32f9190637808fc0b8da7db48} `
-                );
-                const data = await func.json();
-                if (data.Response == "Error") {
-                    clearInterval(intervalId);
-                    this.tickers.splice(this.tickers.indexOf(currentTicker), 1);
-                }
-                this.tickers.find(
-                    (t) =>
-                        t.name === currentTicker.name &&
-                        t.dependence === currentTicker.dependence
-                ).price =
-                    data[currentTicker.dependence] > 1
-                        ? data[currentTicker.dependence].toFixed(2)
-                        : data[currentTicker.dependence].toPrecision(2);
-                if (
-                    currentTicker.name == this.selectedTicker?.name &&
-                    currentTicker.dependence == this.selectedTicker?.dependence
-                ) {
-                    this.graph.push(data[currentTicker.dependence]);
-                }
-            }, 2000);
-            this.tickers.find(
-                (ticker) => ticker.name == currentTicker.name
-            ).intId = intervalId;
+            this.subscribeOnUpdates(currentTicker);
+            localStorage.setItem("tickers", JSON.stringify(this.tickers));
             this.ticker = "";
         },
         deleteTicker(tickerToDelete) {
             this.tickers.splice(this.tickers.indexOf(tickerToDelete), 1);
-            this.closeGraph();
+            if (tickerToDelete.name == this.selectedTicker?.name) {
+                this.closeGraph();
+            } else {
+                this.selectedTicker == null;
+            }
             clearInterval(tickerToDelete.intId);
+            let storagedTickers = JSON.parse(localStorage.getItem("tickers"));
+            storagedTickers.splice(storagedTickers.indexOf(tickerToDelete, 1));
+            localStorage.setItem("tickers", JSON.stringify(storagedTickers));
         },
         closeGraph() {
             this.graph = [];
@@ -157,17 +117,46 @@ export default {
                 );
             });
         },
-        addWalletDependency() {
-            this.walletList.push(this.newDependencyWallet);
-        },
-        alreadyExists(ticker) {
+        alreadyExists(ticker, dependence) {
             let v = false;
             this.tickers.forEach((t) => {
-                if (t.name == ticker) {
+                if (t.name == ticker && t.dependence == dependence) {
                     v = true;
                 }
             });
             return v;
+        },
+        subscribeOnUpdates(ticker) {
+            let intervalId = setInterval(async () => {
+                const func = await fetch(
+                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=d2ac9f63650167356ed7273d10fa3866a960fae32f9190637808fc0b8da7db48} `
+                );
+                const data = await func.json();
+                if (data.Response == "Error") {
+                    clearInterval(intervalId);
+                    this.tickers.splice(this.tickers.indexOf(ticker), 1);
+                }
+                this.tickers.find(
+                    (t) =>
+                        t.name === ticker.name &&
+                        t.dependence == ticker.dependence
+                ).price =
+                    data[ticker.dependence] > 1
+                        ? data[ticker.dependence].toFixed(2)
+                        : data[ticker.dependence].toPrecision(2);
+                if (
+                    ticker.name == this.selectedTicker?.name &&
+                    ticker.dependence == this.selectedTicker?.dependence
+                ) {
+                    this.graph.push(data[ticker.dependence]);
+                }
+                this.tickers.find(
+                    (t) =>
+                        ticker.name == t.name &&
+                        ticker.dependence == t.dependence
+                ).intId = intervalId;
+            }, 2000);
+            return intervalId;
         },
         createHover(value) {
             const hover = document.createElement("div");
@@ -179,14 +168,12 @@ export default {
                 "py-2",
                 "px-3"
             );
-
             hover.innerHTML = value;
             hover.id = "hover";
             document.body.appendChild(hover);
         },
         holdHover(event) {
             const hover = document.getElementById("hover");
-            console.log(hover);
             hover.style.right = event.pageX + 20;
             hover.style.top = event.pageY + 20;
         },
@@ -201,6 +188,18 @@ export default {
         maxValue() {
             return Math.max(...this.graph);
         },
+    },
+    created() {
+        let savedTickers = JSON.parse(localStorage.getItem("tickers"));
+        if (savedTickers?.length > 0) {
+            savedTickers.forEach((ticker) => {
+                this.tickers.push(ticker);
+            });
+        }
+        console.log(this.tickers);
+        this.tickers.forEach((t) => {
+            this.subscribeOnUpdates(t);
+        });
     },
 };
 </script>

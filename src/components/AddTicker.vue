@@ -51,11 +51,33 @@
             </button>
         </div>
     </div>
+    <Modal-app
+        ><template v-slot:modal__content>
+            <input
+                type="text"
+                class="form-control"
+                id="recipient-name"
+                placeholder="Введите название валюты..."
+                v-model="newDependencyWallet"
+            />
+        </template>
+        ><template v-slot:modal__actionBtc>
+            <button
+                type="button"
+                class="btn btn-primary"
+                @click="addWalletDependency()"
+                data-bs-dismiss="modal"
+            >
+                Добавить
+            </button>
+        </template>
+    </Modal-app>
 </template>
 <script>
 import AddButton from "./AddButton.vue";
+import ModalApp from "../components/ModalApp.vue";
 export default {
-    components: { AddButton },
+    components: { AddButton, ModalApp },
 
     emits: {
         "add-ticker": (value) => typeof value === "string",
@@ -88,7 +110,6 @@ export default {
             const data = await func.json();
             for (const coin in data.Data) {
                 if (Object.hasOwnProperty.call(data.Data, coin)) {
-                    // возможно нужно вместо data.Data[coin].Name использовать data.Data[coin].Symbol
                     this.allWallets.push(data.Data[coin].Symbol);
                 }
             }
@@ -109,6 +130,9 @@ export default {
                     break;
                 }
             }
+        },
+        addWalletDependency() {
+            this.walletList.push(this.newDependencyWallet);
         },
     },
     created() {
