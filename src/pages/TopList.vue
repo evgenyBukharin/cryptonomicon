@@ -17,14 +17,14 @@
                 <div class="card-body d-flex justify-content-between">
                     <div class="mw-75">
                         <h5 class="card-title">
-                            #{{
-                                +i +
-                                1 +
-                                " " +
-                                wallet.CoinInfo.FullName +
-                                " " +
-                                wallet.DISPLAY.USD.FROMSYMBOL
-                            }}
+                            #{{ +i + 1 + " " }}
+                            <router-link
+                                class=""
+                                aria-current="page"
+                                :to="'/wallet/' + wallet.CoinInfo.Internal"
+                                >{{ wallet.CoinInfo.FullName }}</router-link
+                            >
+                            {{ " " + wallet.DISPLAY.USD.FROMSYMBOL }}
                         </h5>
                         <p class="card-text">
                             <span class="d-block"

@@ -58,7 +58,7 @@ export default {
     methods: {
         async getNews() {
             const func = await fetch(
-                `https://min-api.cryptocompare.com/data/v2/news/&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
+                `https://min-api.cryptocompare.com/data/v2/news/`
             );
             const data = await func.json();
             this.news = data.Data;
@@ -67,7 +67,7 @@ export default {
         updateNews() {
             setInterval(async () => {
                 const func = await fetch(
-                    `https://min-api.cryptocompare.com/data/v2/news/&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
+                    `https://min-api.cryptocompare.com/data/v2/news/`
                 );
                 const data = await func.json();
                 this.news = data.Data;

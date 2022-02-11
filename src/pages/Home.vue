@@ -186,20 +186,20 @@ export default {
             console.log(event.pageX, event.pageY);
             event.target.classList.add(
                 "border",
-                "border-3",
+                "border-2",
                 "border-white",
                 "border-top-0",
-                "border-bot-0"
+                "border-bottom-0"
             );
         },
         deleteHover(event) {
             document.body.removeChild(document.querySelector("#hover"));
             event.target.classList.remove(
                 "border",
-                "border-3",
+                "border-2",
                 "border-white",
                 "border-top-0",
-                "border-bot-0"
+                "border-bottom-0"
             );
         },
     },
