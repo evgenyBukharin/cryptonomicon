@@ -6,8 +6,8 @@
         <span
             v-for="(graphSel, i) in normalizeGraph()"
             :key="i"
-            class="bg-primary graph__sel-width"
-            :style="{ height: graphSel + '%' }"
+            class="bg-primary"
+            :style="{ height: graphSel + '%', width: this.graphSelWidth }"
             :value="this.graphData[i]"
             @mouseover="
                 createHover(this.graphData[i], this.selectedTicker.dependence)
@@ -37,7 +37,7 @@ export default {
             graphData: [],
         };
     },
-    props: ["selectedTicker", "graphValues", "btnVisible"],
+    props: ["selectedTicker", "graphValues", "btnVisible", "graphSelWidth"],
     emits: {
         clearSelectedTicker: null,
     },
@@ -110,9 +110,5 @@ export default {
 <style lang="scss">
 .graph {
     height: 500px;
-
-    &__sel-width {
-        width: 20px;
-    }
 }
 </style>

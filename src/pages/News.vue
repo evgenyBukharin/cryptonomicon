@@ -71,12 +71,17 @@ export default {
                 );
                 const data = await func.json();
                 this.news = data.Data;
-            }, 20000);
+            }, 5000);
         },
     },
     created() {
         this.getNews();
         this.updateNews();
+    },
+    watch: {
+        $route() {
+            clearInterval(this.intervalId);
+        },
     },
 };
 </script>

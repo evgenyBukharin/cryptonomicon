@@ -35,6 +35,7 @@
         :selectedTicker="this.selectedTicker"
         :graphValues="this.graphData"
         :btnVisible="true"
+        :graphSelWidth="'20px'"
         @clearSelectedTicker="this.selectedTicker = null"
     />
 </template>

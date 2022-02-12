@@ -2,9 +2,10 @@
     <h1>Страница {{ $route.params.walletName }}</h1>
     <Wallet-graph
         :selectedTicker="{ name: this.walletName, dependence: 'USD' }"
-        :graphValues="this.lastMonthGraph"
+        :graphValues="this.graphData"
         @clearSelectedTicker="this.selectedTicker = null"
         :btnVisible="false"
+        :graphSelWidth="'40px'"
     />
 </template>
 <script>
@@ -13,7 +14,7 @@ export default {
     data() {
         return {
             walletName: this.$route.params.walletName,
-            lastMonthGraph: [],
+            graphData: [],
         };
     },
     components: { WalletGraph },
@@ -24,9 +25,8 @@ export default {
             );
             const data = await f.json();
             data.Data.Data.forEach((coinData) => {
-                this.lastMonthGraph.push(coinData.high);
+                this.graphData.push(coinData.high);
             });
-            console.log(this.lastMonthGraph);
         },
     },
     created() {
