@@ -1,5 +1,5 @@
 <template>
-    <add-ticker @add-ticker="add" />
+    <Add-ticker @add-ticker="add" />
     <hr class="mb-3 mt-3" />
     <div class="container">
         <div class="row row-cols-4 g-3">
@@ -31,45 +31,23 @@
             </div>
         </div>
     </div>
-    <div
-        v-if="selectedTicker !== null"
-        class="graph position-relative mt-3 mb-3 w-100 border border-2 border-primary border-top-0 border-end-0 d-flex align-items-end"
-    >
-        <span
-            v-for="(graphSel, i) in normalizeGraph()"
-            :key="i"
-            class="graph-elem bg-primary graphSel-width"
-            :style="{ height: graphSel + '%' }"
-            :value="this.graphData[i]"
-            @mouseover="
-                createHover(this.graphData[i], this.selectedTicker.dependence)
-            "
-            @mousemove="(event) => holdHover(event)"
-            @mouseleave="(event) => deleteHover(event)"
-        ></span>
-        <span
-            v-show="graph.length < 10"
-            style="height: 100%; width: 1px"
-        ></span>
-        <img
-            src="../assets/cancel.png"
-            class="position-absolute top-0 end-0 cursor-pointer"
-            alt="close graph btn"
-            style="width: 18px; margin-right: -22px"
-            @click="closeGraph"
-        />
-    </div>
+    <Wallet-graph
+        :selectedTicker="this.selectedTicker"
+        :graphValues="this.graphData"
+        :btnVisible="true"
+        @clearSelectedTicker="this.selectedTicker = null"
+    />
 </template>
 <script>
 import AddTicker from "../components/AddTicker.vue";
+import WalletGraph from "../components/WalletGraph.vue";
 export default {
     name: "App",
-    components: { AddTicker },
+    components: { AddTicker, WalletGraph },
     data() {
         return {
             tickers: [],
             selectedTicker: null,
-            graph: [],
             graphData: [],
         };
     },
@@ -91,35 +69,23 @@ export default {
         },
         deleteTicker(tickerToDelete) {
             this.tickers.splice(this.tickers.indexOf(tickerToDelete), 1);
-            if (tickerToDelete.name == this.selectedTicker?.name) {
-                this.closeGraph();
-            } else {
-                this.selectedTicker == null;
+            if (
+                tickerToDelete.name == this.selectedTicker?.name &&
+                tickerToDelete.dependence == this.selectedTicker?.dependence
+            ) {
+                this.selectedTicker = null;
+                this.graphData = [];
             }
             clearInterval(tickerToDelete.intId);
             let storagedTickers = JSON.parse(localStorage.getItem("tickers"));
-            storagedTickers.splice(storagedTickers.indexOf(tickerToDelete, 1));
+            storagedTickers.splice(
+                storagedTickers.findIndex((ticker) => {
+                    tickerToDelete.name == ticker.name &&
+                        tickerToDelete.dependence == ticker.name;
+                }),
+                1
+            );
             localStorage.setItem("tickers", JSON.stringify(storagedTickers));
-        },
-        closeGraph() {
-            this.graph = [];
-            this.selectedTicker = null;
-        },
-        selectTicker(tickerToSelect) {
-            if (this.selectedTicker !== tickerToSelect) {
-                this.graph = [];
-                this.selectedTicker = tickerToSelect;
-            }
-        },
-        normalizeGraph() {
-            this.graphData = this.graph;
-            return this.graph.map((value) => {
-                return (
-                    ((value - this.minValue) * 95) /
-                        (this.maxValue - this.minValue) +
-                    5
-                );
-            });
         },
         alreadyExists(ticker, dependence) {
             let v = false;
@@ -152,7 +118,7 @@ export default {
                     ticker.name == this.selectedTicker?.name &&
                     ticker.dependence == this.selectedTicker?.dependence
                 ) {
-                    this.graph.push(data[ticker.dependence]);
+                    this.graphData.push(data[ticker.dependence]);
                 }
                 this.tickers.find(
                     (t) =>
@@ -162,53 +128,11 @@ export default {
             }, 2000);
             return intervalId;
         },
-        createHover(value, dep) {
-            const hover = document.createElement("div");
-            hover.classList.add(
-                "position-absolute",
-                "bg-primary",
-                "text-white",
-                "rounded-2",
-                "py-2",
-                "px-3",
-                "border",
-                "border-4",
-                "border-white"
-            );
-            hover.innerHTML = value + " " + dep;
-            hover.id = "hover";
-            document.body.appendChild(hover);
-        },
-        holdHover(event) {
-            const hover = document.getElementById("hover");
-            hover.style.left = event.pageX + 20 + "px";
-            hover.style.top = event.pageY - 40 + "px";
-            console.log(event.pageX, event.pageY);
-            event.target.classList.add(
-                "border",
-                "border-2",
-                "border-white",
-                "border-top-0",
-                "border-bottom-0"
-            );
-        },
-        deleteHover(event) {
-            document.body.removeChild(document.querySelector("#hover"));
-            event.target.classList.remove(
-                "border",
-                "border-2",
-                "border-white",
-                "border-top-0",
-                "border-bottom-0"
-            );
-        },
-    },
-    computed: {
-        minValue() {
-            return Math.min(...this.graph);
-        },
-        maxValue() {
-            return Math.max(...this.graph);
+        selectTicker(tickerToSelect) {
+            if (this.selectedTicker !== tickerToSelect) {
+                this.graphData = [];
+                this.selectedTicker = tickerToSelect;
+            }
         },
     },
     created() {
@@ -228,12 +152,7 @@ export default {
 .cursor-pointer {
     cursor: pointer;
 }
-.graphSel-width {
-    width: 20px;
-}
-.graph {
-    height: 500px;
-}
+
 .w {
     &-15 {
         width: 15%;

@@ -53,6 +53,7 @@ export default {
     data() {
         return {
             news: [],
+            intervalId: null,
         };
     },
     methods: {
@@ -62,16 +63,14 @@ export default {
             );
             const data = await func.json();
             this.news = data.Data;
-            console.log(this.news);
         },
         updateNews() {
-            setInterval(async () => {
+            this.intervalId = setInterval(async () => {
                 const func = await fetch(
                     `https://min-api.cryptocompare.com/data/v2/news/`
                 );
                 const data = await func.json();
                 this.news = data.Data;
-                console.log(this.news);
             }, 20000);
         },
     },
