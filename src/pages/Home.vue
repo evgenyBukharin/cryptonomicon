@@ -37,6 +37,7 @@
         :btnVisible="true"
         :graphSelWidth="'20px'"
         @clearSelectedTicker="this.selectedTicker = null"
+        :title="false"
     />
 </template>
 <script>
@@ -157,6 +158,9 @@ export default {
 .w {
     &-15 {
         width: 15%;
+    }
+    &-20 {
+        width: 20%;
     }
     &-30 {
         width: 30%;

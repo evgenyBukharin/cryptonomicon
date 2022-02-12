@@ -1,32 +1,37 @@
 <template>
-    <div
-        v-if="selectedTicker !== null"
-        class="graph position-relative mt-3 mb-3 w-100 border border-2 border-primary border-top-0 border-end-0 d-flex align-items-end"
-    >
-        <span
-            v-for="(graphSel, i) in normalizeGraph()"
-            :key="i"
-            class="bg-primary"
-            :style="{ height: graphSel + '%', width: this.graphSelWidth }"
-            :value="this.graphData[i]"
-            @mouseover="
-                createHover(this.graphData[i], this.selectedTicker.dependence)
-            "
-            @mousemove="(event) => holdHover(event)"
-            @mouseleave="(event) => deleteHover(event)"
-        ></span>
-        <span
-            v-show="graph.length < 10"
-            style="height: 100%; width: 1px"
-        ></span>
-        <img
-            v-if="btnVisible"
-            src="../assets/cancel.png"
-            class="position-absolute top-0 end-0 cursor-pointer"
-            alt="close graph btn"
-            style="width: 18px; margin-right: -22px"
-            @click="closeGraph"
-        />
+    <div v-if="selectedTicker !== null" class="mt-3 mb-3 w-100">
+        <div
+            class="graph position-relative d-flex align-items-end border border-2 border-primary border-top-0 border-end-0"
+        >
+            <span
+                v-for="(graphSel, i) in normalizeGraph()"
+                :key="i"
+                class="bg-primary"
+                :style="{ height: graphSel + '%', width: this.graphSelWidth }"
+                :value="this.graphData[i]"
+                @mouseover="
+                    createHover(
+                        this.graphData[i],
+                        this.selectedTicker.dependence
+                    )
+                "
+                @mousemove="(event) => holdHover(event)"
+                @mouseleave="(event) => deleteHover(event)"
+            ></span>
+            <span
+                v-show="graph.length < 10"
+                style="height: 100%; width: 1px"
+            ></span>
+            <img
+                v-if="btnVisible"
+                src="../assets/cancel.png"
+                class="position-absolute top-0 end-0 cursor-pointer"
+                alt="close graph btn"
+                style="width: 18px; margin-right: -22px"
+                @click="closeGraph"
+            />
+        </div>
+        <h5 v-if="title" class="mt-2">Данные за последние: {{ title }} дней</h5>
     </div>
 </template>
 <script>
@@ -37,7 +42,13 @@ export default {
             graphData: [],
         };
     },
-    props: ["selectedTicker", "graphValues", "btnVisible", "graphSelWidth"],
+    props: [
+        "selectedTicker",
+        "graphValues",
+        "btnVisible",
+        "graphSelWidth",
+        "title",
+    ],
     emits: {
         clearSelectedTicker: null,
     },
