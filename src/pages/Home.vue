@@ -56,7 +56,7 @@ export default {
     methods: {
         add(ticker, tickerDependence) {
             // Проверка на существование тикера
-            if (this.alreadyExists(ticker)) {
+            if (this.alreadyExists(ticker, tickerDependence)) {
                 return;
             }
             const currentTicker = {
@@ -147,6 +147,13 @@ export default {
         this.tickers.forEach((t) => {
             this.subscribeOnUpdates(t);
         });
+    },
+    watch: {
+        $route() {
+            this.tickers.forEach((ticker) => {
+                clearInterval(ticker.intId);
+            });
+        },
     },
 };
 </script>

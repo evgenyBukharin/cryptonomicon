@@ -1,7 +1,7 @@
 <template>
     <h1>Добавить тикет</h1>
     <div class="d-flex w-75">
-        <add-button @click="add" type="button" />
+        <Add-button @click="add" type="button" />
         <input
             v-model="ticker"
             @input="findMatches()"
@@ -17,29 +17,8 @@
             <option value="USD" selected>USD</option>
             <option v-for="(wallet, i) in walletList" :key="i" :value="wallet">
                 {{ wallet }}
-            </option>
-        </select>
-        <div
-            class="p-10 cursor-pointer"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="currentColor"
-                class="bi bi-plus-square"
-                viewBox="0 0 16 16"
-            >
-                <path
-                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
-                />
-                <path
-                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
-                />
-            </svg>
-        </div>
+            </option></select
+        ><Add-dependence @addDependence="addNewDependence" />
     </div>
     <div class="d-flex mt-3 w-40">
         <div class="me-3" v-for="(match, i) in walletMatches" :key="i">
@@ -51,24 +30,22 @@
             </button>
         </div>
     </div>
-    <Modal-app @addDependencyWallet="addWalletDependency"></Modal-app>
 </template>
 <script>
 import AddButton from "./AddButton.vue";
-import ModalApp from "../components/ModalApp.vue";
+import AddDependence from "./AddDependence.vue";
 export default {
-    components: { AddButton, ModalApp },
-
+    components: { AddButton, AddDependence },
     emits: {
         "add-ticker": (value) => typeof value === "string",
     },
     data() {
         return {
             ticker: "",
-            tickerDependence: "USD",
-            walletList: ["RUB", "EUR", "ETH"],
             walletMatches: [],
             allWallets: [],
+            walletList: ["RUB", "EUR", "ETH"],
+            tickerDependence: "USD",
         };
     },
     methods: {
@@ -106,13 +83,14 @@ export default {
                 if (foundIndex !== -1) {
                     this.walletMatches.push(this.allWallets[i]);
                 }
-                if (this.walletMatches.length == 4) {
+                if (this.walletMatches.length == 8) {
                     break;
                 }
             }
         },
-        addWalletDependency(newDependencyWallet) {
-            this.walletList.push(newDependencyWallet);
+        addNewDependence(newDependence) {
+            console.log(newDependence);
+            this.walletList.push(newDependence);
         },
     },
     created() {

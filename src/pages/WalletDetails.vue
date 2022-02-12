@@ -1,12 +1,14 @@
 <template>
-    <h1>Общая информация о валюте {{ $route.params.walletName }}</h1>
+    <h1>Информация о {{ $route.params.walletName }}</h1>
     <div class="d-flex align-items-center">
         <h4 class="me-3">Показать изменение курса валюты за последние:</h4>
         <input
-            v-model="graphDays"
+            @input="(event) => validateGraphDays(event)"
+            v-model.number="graphDays"
             type="text"
             class="form-control form-control-md w-20 me-2"
             placeholder="Введите количество дней"
+            @keydown.enter="updateGraphData(this.graphDays)"
         />
         <div class="btn btn-success" @click="updateGraphData(this.graphDays)">
             Показать
@@ -39,13 +41,21 @@ export default {
                 `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${this.walletName}&tsym=USD&limit=${limit}`
             );
             const data = await f.json();
+            this.graphData = [];
             data.Data.Data.forEach((coinData) => {
                 this.graphData.push(coinData.high);
             });
         },
         updateGraphData(limit) {
+            if (this.graphDays > 2000) {
+                return;
+            }
             this.getGraphData(limit);
             this.currentLimit = limit;
+            this.graphDays = null;
+        },
+        validateGraphDays(e) {
+            e.target.value = e.target.value.replace(/\D/g, "");
         },
     },
     created() {

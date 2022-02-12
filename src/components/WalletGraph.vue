@@ -31,7 +31,10 @@
                 @click="closeGraph"
             />
         </div>
-        <h5 v-if="title" class="mt-2">Данные за последние: {{ title }} дней</h5>
+        <h5 v-if="title" class="mt-2">
+            На графике отображены данные за последние {{ title }} дней
+            (максимально допустимое количество дней - 2000)
+        </h5>
     </div>
 </template>
 <script>
@@ -91,7 +94,7 @@ export default {
             hover.style.top = event.pageY - 40 + "px";
             event.target.classList.add(
                 "border",
-                "border-2",
+                "border-1",
                 "border-white",
                 "border-top-0",
                 "border-bottom-0"
@@ -101,7 +104,7 @@ export default {
             document.body.removeChild(document.querySelector("#hover"));
             event.target.classList.remove(
                 "border",
-                "border-2",
+                "border-1",
                 "border-white",
                 "border-top-0",
                 "border-bottom-0"
