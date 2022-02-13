@@ -20,7 +20,7 @@
             </option></select
         ><Add-dependence @addDependence="addNewDependence" />
     </div>
-    <div class="d-flex mt-3 w-40">
+    <div v-if="walletMatches.length > 0" class="d-flex my-3 w-40">
         <div class="me-3" v-for="(match, i) in walletMatches" :key="i">
             <button
                 class="btn btn-secondary text-white rounded-3 text-uppercase"
@@ -29,6 +29,15 @@
                 {{ match }}
             </button>
         </div>
+        <img
+            style="width: 14px; height: 14px"
+            class="cursor-pointer"
+            src="../assets/cancel.png"
+            @click="
+                this.walletMatches = [];
+                this.ticker = '';
+            "
+        />
     </div>
 </template>
 <script>
@@ -83,13 +92,16 @@ export default {
                 if (foundIndex !== -1) {
                     this.walletMatches.push(this.allWallets[i]);
                 }
-                if (this.walletMatches.length == 8) {
-                    break;
-                }
+            }
+            this.shuffle(this.walletMatches);
+            if (this.walletMatches.length > 8) {
+                this.walletMatches.length = 8;
             }
         },
+        shuffle(array) {
+            array.sort(() => Math.random() - 0.5);
+        },
         addNewDependence(newDependence) {
-            console.log(newDependence);
             this.walletList.push(newDependence);
         },
     },

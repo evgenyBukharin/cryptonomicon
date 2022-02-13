@@ -63,6 +63,7 @@ export default {
             );
             const data = await func.json();
             this.news = data.Data;
+            this.news.length = 30;
         },
         updateNews() {
             this.intervalId = setInterval(async () => {
@@ -71,6 +72,7 @@ export default {
                 );
                 const data = await func.json();
                 this.news = data.Data;
+                this.news.length = 30;
             }, 5000);
         },
     },

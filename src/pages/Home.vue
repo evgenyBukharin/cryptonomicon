@@ -1,9 +1,39 @@
 <template>
     <Add-ticker @add-ticker="add" />
+    <div class="d-flex align-items-center mt-3">
+        <h5 class="mb-0 me-2">Фильтр:</h5>
+        <input
+            v-model.trim="filter"
+            @input="
+                this.filter = filter.toUpperCase();
+                this.page = 1;
+            "
+            type="text"
+            class="form-control form-control-md w-15"
+            placeholder="Название валюты"
+        />
+    </div>
     <hr class="mb-3 mt-3" />
+    <div v-if="this.tickers.length > 0" class="mb-3">
+        <button
+            class="btn btn-success me-2"
+            @click="this.page--"
+            :disabled="this.page == 1"
+        >
+            Назад
+        </button>
+        <button
+            class="btn btn-success"
+            @click="this.page++"
+            :disabled="!this.hasNextPage"
+        >
+            Вперед
+        </button>
+    </div>
+
     <div class="container">
         <div class="row row-cols-4 g-3">
-            <div class="col" v-for="(t, i) in tickers" :key="i">
+            <div class="col" v-for="(t, i) in filteredTickers()" :key="i">
                 <div
                     class="card border-4"
                     :class="{
@@ -51,6 +81,9 @@ export default {
             tickers: [],
             selectedTicker: null,
             graphData: [],
+            page: 1,
+            filter: "",
+            hasNextPage: false,
         };
     },
     methods: {
@@ -68,6 +101,7 @@ export default {
             this.subscribeOnUpdates(currentTicker);
             localStorage.setItem("tickers", JSON.stringify(this.tickers));
             this.ticker = "";
+            this.filter = "";
         },
         deleteTicker(tickerToDelete) {
             this.tickers.splice(this.tickers.indexOf(tickerToDelete), 1);
@@ -107,6 +141,20 @@ export default {
                 if (data.Response == "Error") {
                     clearInterval(intervalId);
                     this.tickers.splice(this.tickers.indexOf(ticker), 1);
+                    let storagedTickers = JSON.parse(
+                        localStorage.getItem("tickers")
+                    );
+                    storagedTickers.splice(
+                        storagedTickers.findIndex((t) => {
+                            ticker.name == t.name &&
+                                ticker.dependence == t.name;
+                        }),
+                        1
+                    );
+                    localStorage.setItem(
+                        "tickers",
+                        JSON.stringify(storagedTickers)
+                    );
                 }
                 this.tickers.find(
                     (t) =>
@@ -135,6 +183,22 @@ export default {
                 this.graphData = [];
                 this.selectedTicker = tickerToSelect;
             }
+        },
+        filteredTickers() {
+            const filteredTickers = this.tickers.filter((ticker) =>
+                ticker.name.includes(this.filter)
+            );
+            this.hasNextPage = filteredTickers.length > this.end;
+            console.log(this.hasNextPage);
+            return filteredTickers.slice(this.start, this.end);
+        },
+    },
+    computed: {
+        start() {
+            return (this.page - 1) * 4;
+        },
+        end() {
+            return this.page * 4;
         },
     },
     created() {
