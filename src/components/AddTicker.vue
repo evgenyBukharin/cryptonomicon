@@ -25,6 +25,7 @@
             <button
                 class="btn btn-secondary text-white rounded-3 text-uppercase"
                 @click="addTicker(match)"
+                :id="'autocompleteBtn' + (i + 1)"
             >
                 {{ match }}
             </button>
@@ -51,6 +52,7 @@ export default {
     data() {
         return {
             ticker: "",
+            tickerOverride: "",
             walletMatches: [],
             allWallets: [],
             walletList: ["RUB", "EUR", "ETH"],
