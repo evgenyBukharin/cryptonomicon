@@ -1,5 +1,5 @@
 <template>
-    <h1 class="mb-4">Топ 10 - лист валют за последние 24 часа</h1>
+    <h1 class="mb-4">Топ - лист валют за последние 24 часа</h1>
     <div class="row row-cols-2 g-4">
         <div class="col" v-for="(wallet, i) in paginatedWalletsList()" :key="i">
             <div class="card">

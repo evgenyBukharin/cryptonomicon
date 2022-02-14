@@ -1,5 +1,29 @@
 <template>
-    <h1>Информация о {{ $route.params.walletName }}</h1>
+    <div class="d-flex align-items-center mb-2">
+        <h1 class="mb-0">Страница {{ walletData.CoinName }}</h1>
+        <img
+            class="ms-2"
+            style="width: 40px; height: 40px"
+            v-bind:src="'https://www.cryptocompare.com' + walletData.ImageUrl"
+            :alt="walletData.FullName + ' image'"
+        />
+    </div>
+    <p class="card-text">
+        <span v-if="walletData.AssetLaunchDate" class="d-block"
+            >Дата создания валюты: {{ walletData.AssetLaunchDate }}</span
+        >
+        <span v-if="walletData.Algorithm" class="d-block"
+            >Валюта хэшируется с помощью алгоритма
+            {{ walletData.Algorithm }}</span
+        >
+        <span v-if="walletData.TotalCoinsMined" class="d-block"
+            >Всего добыто {{ walletData.TotalCoinsMined }} единиц валюты</span
+        >
+        <span v-if="walletData.Rating" class="d-block"
+            >Оценка адаптивности к различным алгоритмам:
+            {{ walletData.Rating.Weiss.TechnologyAdoptionRating }}</span
+        >
+    </p>
     <div class="d-flex align-items-center">
         <h4 class="me-3">Показать изменение курса валюты за последние:</h4>
         <input
@@ -29,6 +53,7 @@ export default {
     data() {
         return {
             walletName: this.$route.params.walletName,
+            walletData: [],
             graphData: [],
             graphDays: null,
             currentLimit: 30,
@@ -46,6 +71,14 @@ export default {
                 this.graphData.push(coinData.high);
             });
         },
+        async getWalletData() {
+            const f = await fetch(
+                `https://min-api.cryptocompare.com/data/all/coinlist?fsym=${this.walletName}`
+            );
+            const data = await f.json();
+            this.walletData = data.Data[this.walletName];
+            console.log(this.walletData);
+        },
         updateGraphData(limit) {
             if (this.graphDays > 2000) {
                 return;
@@ -60,6 +93,7 @@ export default {
     },
     created() {
         this.getGraphData(this.currentLimit);
+        this.getWalletData();
     },
 };
 </script>

@@ -189,15 +189,16 @@ export default {
                 ticker.name.includes(this.filter)
             );
             this.hasNextPage = filteredTickers.length > this.end;
+            console.log(this.hasNextPage);
             return filteredTickers.slice(this.start, this.end);
         },
     },
     computed: {
         start() {
-            return (this.page - 1) * 8;
+            return (this.page - 1) * 4;
         },
         end() {
-            return this.page * 8;
+            return this.page * 4;
         },
     },
     created() {
