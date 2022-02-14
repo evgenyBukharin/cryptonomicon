@@ -175,7 +175,7 @@ export default {
                         ticker.name == t.name &&
                         ticker.dependence == t.dependence
                 ).intId = intervalId;
-            }, 2000);
+            }, 5000);
             return intervalId;
         },
         selectTicker(tickerToSelect) {
