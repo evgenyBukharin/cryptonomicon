@@ -96,13 +96,14 @@ export default {
             pages: [],
             moreDataDisabled: false,
             newsPerPage: 6,
+            maxTopListLenght: 100,
             page: 1,
         };
     },
     methods: {
         async getData() {
-            if (this.walletsLimit > 100) {
-                this.walletsLimit = 100;
+            if (this.walletsLimit > this.maxTopListLenght) {
+                this.walletsLimit = this.maxTopListLenght;
                 this.moreDataDisabled = true;
             }
             this.pages = [];
@@ -131,17 +132,20 @@ export default {
     },
     computed: {
         start() {
-            return this.page == 17
+            return this.page == this.lastPage
                 ? this.walletsLimit - this.extraWalletCount
                 : (this.page - 1) * this.newsPerPage;
         },
         end() {
-            return this.page == 17
+            return this.page == this.lastPage
                 ? this.walletsLimit
                 : this.page * this.newsPerPage;
         },
         extraWalletCount() {
             return this.walletsList.length % this.newsPerPage;
+        },
+        lastPage() {
+            return Math.ceil(this.maxTopListLenght / this.newsPerPage);
         },
     },
 };

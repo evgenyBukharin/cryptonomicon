@@ -3,7 +3,6 @@
         <header-app />
         <router-view></router-view>
     </div>
-    <!-- <hr class="mt-1" v-show="selectedTicker !== null" /> -->
 </template>
 
 <script>

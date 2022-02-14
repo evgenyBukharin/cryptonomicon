@@ -79,6 +79,7 @@ export default {
     data() {
         return {
             tickers: [],
+            tickersPerPage: 8,
             selectedTicker: null,
             graphData: [],
             page: 1,
@@ -189,16 +190,15 @@ export default {
                 ticker.name.includes(this.filter)
             );
             this.hasNextPage = filteredTickers.length > this.end;
-            console.log(this.hasNextPage);
             return filteredTickers.slice(this.start, this.end);
         },
     },
     computed: {
         start() {
-            return (this.page - 1) * 4;
+            return (this.page - 1) * this.tickersPerPage;
         },
         end() {
-            return this.page * 4;
+            return this.page * this.tickersPerPage;
         },
     },
     created() {
