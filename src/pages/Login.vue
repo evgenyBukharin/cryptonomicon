@@ -1,5 +1,5 @@
 <template>
-    <form class="w-30" @submit.prevent="sendRegData">
+    <form class="w-30" @submit.prevent="sendLoginData()">
         <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите</h1>
         <div class="form-floating">
             <input
@@ -25,6 +25,11 @@
             Войти
         </button>
     </form>
+    <h4>
+        <router-link class="nav-link" to="/register"
+            >Еще не зарегистированы? Зарегистрироваться</router-link
+        >
+    </h4>
 </template>
 <script>
 import axios from "axios";
@@ -36,8 +41,7 @@ export default {
         };
     },
     methods: {
-        sendRegData() {
-            console.log(this.login, this.password);
+        sendLoginData() {
             axios
                 .post("../php/login.php", {
                     login: this.login,
@@ -45,9 +49,11 @@ export default {
                 })
                 .then(function (response) {
                     console.log(response);
+                    console.log(document.cookie);
                 })
                 .catch(function (error) {
                     console.log(error);
+                    console.log(document.cookie);
                 });
         },
     },

@@ -7,6 +7,7 @@ import TopList from '../pages/TopList.vue'
 import News from '../pages/News.vue'
 import WalletDetails from '../pages/WalletDetails.vue'
 import Login from '../pages/Login.vue'
+import Register from '../pages/Register.vue'
 
 const routes = [{
         path: '/',
@@ -32,6 +33,11 @@ const routes = [{
         path: '/login',
         name: 'Login',
         component: Login,
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: Register,
     },
     {
         path: '/:catchAll(.*)',
