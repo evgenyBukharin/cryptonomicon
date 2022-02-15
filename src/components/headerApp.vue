@@ -25,6 +25,9 @@
             <li class="nav-item">
                 <router-link class="nav-link" to="/news">Новости</router-link>
             </li>
+            <li class="nav-item">
+                <router-link class="nav-link" to="/login">Войти</router-link>
+            </li>
         </ul>
     </header>
 </template>

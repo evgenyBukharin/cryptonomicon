@@ -6,6 +6,7 @@ import Home from '../pages/Home.vue'
 import TopList from '../pages/TopList.vue'
 import News from '../pages/News.vue'
 import WalletDetails from '../pages/WalletDetails.vue'
+import Login from '../pages/Login.vue'
 
 const routes = [{
         path: '/',
@@ -27,6 +28,15 @@ const routes = [{
         name: 'News',
         component: News,
     },
+    {
+        path: '/login',
+        name: 'Login',
+        component: Login,
+    },
+    {
+        path: '/:catchAll(.*)',
+        redirect: '/'
+    }
 ]
 
 const router = createRouter({
