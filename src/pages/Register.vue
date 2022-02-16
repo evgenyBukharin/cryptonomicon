@@ -1,6 +1,6 @@
 <template>
     <form class="w-30" @submit.prevent="sendRegData">
-        <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите</h1>
+        <h1 class="h3 mb-3 fw-normal">Пожалуйста, зарегистрируйтесь</h1>
         <div class="form-floating">
             <input
                 type="text"
@@ -62,7 +62,7 @@
             <label for="floatingPassword6">Введите ваш email</label>
         </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit">
-            Войти
+            Зарегистрироваться
         </button>
     </form>
 </template>

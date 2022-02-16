@@ -48,10 +48,7 @@ export default {
                     password: this.password,
                 })
                 .then(function (response) {
-                    console.log(JSON.parse(response.data));
-                })
-                .catch(function (error) {
-                    console.log(error);
+                    console.log(response);
                 });
         },
     },
