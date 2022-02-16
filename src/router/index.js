@@ -8,6 +8,7 @@ import News from '../pages/News.vue'
 import WalletDetails from '../pages/WalletDetails.vue'
 import Login from '../pages/Login.vue'
 import Register from '../pages/Register.vue'
+import Admin from '../pages/Admin.vue'
 
 const routes = [{
         path: '/',
@@ -38,6 +39,11 @@ const routes = [{
         path: '/register',
         name: 'Register',
         component: Register,
+    },
+    {
+        path: '/admin',
+        name: 'Admin',
+        component: Admin,
     },
     {
         path: '/:catchAll(.*)',

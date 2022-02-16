@@ -48,12 +48,10 @@ export default {
                     password: this.password,
                 })
                 .then(function (response) {
-                    console.log(response);
-                    console.log(document.cookie);
+                    console.log(JSON.parse(response.data));
                 })
                 .catch(function (error) {
                     console.log(error);
-                    console.log(document.cookie);
                 });
         },
     },

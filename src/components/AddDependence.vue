@@ -82,14 +82,12 @@ export default {
             if (newDependence.lenght !== 0) {
                 return true;
             } else {
-                console.warn("Пустую строку нельзя добавить");
                 return false;
             }
         },
     },
     methods: {
         addNewDependence() {
-            console.log(this.newDependence);
             this.$emit("addDependence", this.newDependence);
         },
     },

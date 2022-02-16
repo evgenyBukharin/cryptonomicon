@@ -76,6 +76,7 @@ import WalletGraph from "../components/WalletGraph.vue";
 export default {
     name: "App",
     components: { AddTicker, WalletGraph },
+    props: ["userId"],
     data() {
         return {
             tickers: [],
