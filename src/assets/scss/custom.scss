@@ -1,5 +1,8 @@
 // Обязательные
 @import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/utilities";
 
 // Переопределения переменных по умолчанию
 $nav-link-color: rgba(0, 0, 0, 0.8);
@@ -7,7 +10,50 @@ $nav-link-hover-color: #0d6efd;
 $nav-tabs-link-hover-border-color: #0d6efd;
 $nav-tabs-link-active-color: #0d6efd;
 
-
-// Обязательные
-@import "../node_modules/bootstrap/scss/variables";
-@import "../node_modules/bootstrap/scss/mixins";
+$utilities: map-merge(
+    $utilities,
+    (
+        "width":
+            map-merge(
+                map-get($utilities, "width"),
+                (
+                    values:
+                        map-merge(
+                            map-get(map-get($utilities, "width"), "values"),
+                            (
+                                5: 5%,
+                                10: 10%,
+                                15: 15%,
+                                20: 20%,
+                                30: 30%,
+                                35: 35%,
+                                40: 40%,
+                                45: 45%,
+                                55: 55%,
+                                60: 60%,
+                                65: 65%,
+                                70: 70%,
+                                80: 80%,
+                                85: 85%,
+                                90: 90%,
+                                95: 95%,
+                            )
+                        ),
+                )
+            ),
+        "top":
+            map-merge(
+                map-get($utilities, "top"),
+                (
+                    values:
+                        map-merge(
+                            map-get(map-get($utilities, "top"), "values"),
+                            (
+                                5: 5%,
+                                95: 95%,
+                            )
+                        ),
+                )
+            ),
+    )
+);

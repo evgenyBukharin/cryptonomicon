@@ -17,33 +17,14 @@
                 <div class="card-body d-flex justify-content-between">
                     <div class="mw-90">
                         <h3 class="card-title">
-                            {{
-                                "#" +
-                                user.id +
-                                " " +
-                                user.name +
-                                " " +
-                                user.surname
-                            }}
+                            {{ "#" + user.id + " " + user.name + " " + user.surname }}
                         </h3>
                         <h5 class="card-title">Логин: {{ user.login }}</h5>
                         <h5 class="card-title">Email: {{ user.email }}</h5>
-                        <h5 class="card-title">
-                            Аккаунт создан: {{ user.regDate }}
-                        </h5>
+                        <h5 class="card-title">Аккаунт создан: {{ user.regDate }}</h5>
                         <h5 class="card-title">Роль: {{ user.role }}</h5>
-                        <button
-                            class="btn btn-success me-2"
-                            @click="changeRole(user.id, 'admin')"
-                        >
-                            Изменить роль
-                        </button>
-                        <button
-                            class="btn btn-danger text-white"
-                            @click="deleteUser(user.id)"
-                        >
-                            Удалить аккаунт
-                        </button>
+                        <button class="btn btn-success me-2" @click="changeRole(user.id, 'admin')">Изменить роль</button>
+                        <button class="btn btn-danger text-white" @click="deleteUser(user.id)">Удалить аккаунт</button>
                     </div>
                 </div>
             </div>
@@ -61,9 +42,7 @@ export default {
     methods: {
         async getData() {
             this.users = [];
-            axios
-                .get("../php/getUsers.php")
-                .then((response) => this.pushUsers(response.data));
+            axios.get("../php/getUsers.php").then((response) => this.pushUsers(response.data));
         },
         pushUsers(response) {
             response.forEach((user) => {
@@ -102,7 +81,11 @@ export default {
         },
     },
     created() {
-        this.getData();
+        if (localStorage.getItem("userId") == "1") {
+            this.getData();
+        } else {
+            location.href = "/";
+        }
     },
 };
 </script>
