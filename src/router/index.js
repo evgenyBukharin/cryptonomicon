@@ -9,7 +9,7 @@ import WalletDetails from '../pages/WalletDetails.vue'
 import Login from '../pages/Login.vue'
 import Register from '../pages/Register.vue'
 import Admin from '../pages/Admin.vue'
-import Calculator from '../pages/Calculator.vue'
+import Converter from '../pages/Converter.vue'
 
 const routes = [{
         path: '/',
@@ -53,7 +53,7 @@ const routes = [{
     {
         path: '/calulator',
         name: 'Calcullator',
-        component: Calculator,
+        component: Converter,
     },
 ]
 

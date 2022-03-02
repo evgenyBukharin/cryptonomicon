@@ -23,26 +23,13 @@
                             {{ "Источник: " + n.source_info.name }}
                         </h5>
                         <h5 class="card-title">
-                            {{
-                                "Опубликованно " +
-                                new Date(n.published_on * 1000).toLocaleString()
-                            }}
+                            {{ "Опубликованно " + new Date(n.published_on * 1000).toLocaleString() }}
                         </h5>
                         <p class="card-text">
-                            <span class="d-inline-block"
-                                >{{ n.body }}
-                                <a class="d-inline" :href="n.url"
-                                    >Читать дальше...</a
-                                ></span
-                            >
+                            <span class="d-inline-block">{{ n.body }} <a class="d-inline" :href="n.url">Читать дальше...</a></span>
                         </p>
                     </div>
-                    <img
-                        style="width: 120px; height: 120px"
-                        class="my-auto"
-                        v-bind:src="n.source_info.img"
-                        :alt="'news image'"
-                    />
+                    <img style="width: 120px; height: 120px" class="my-auto" v-bind:src="n.source_info.img" :alt="'news image'" />
                 </div>
             </div>
         </div>
@@ -58,21 +45,18 @@ export default {
     },
     methods: {
         async getNews() {
-            const func = await fetch(
-                `https://min-api.cryptocompare.com/data/v2/news/`
-            );
+            const func = await fetch(`https://min-api.cryptocompare.com/data/v2/news/`);
             const data = await func.json();
             this.news = data.Data;
             this.news.length = 30;
         },
         updateNews() {
             this.intervalId = setInterval(async () => {
-                const func = await fetch(
-                    `https://min-api.cryptocompare.com/data/v2/news/`
-                );
+                const func = await fetch(`https://min-api.cryptocompare.com/data/v2/news/`);
                 const data = await func.json();
-                this.news = data.Data;
-                this.news.length = 30;
+                let notTranslatedNews = data.Data;
+                this.news = notTranslatedNews;
+                this.news.length = 10;
             }, 5000);
         },
     },
