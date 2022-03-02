@@ -9,6 +9,7 @@ import WalletDetails from '../pages/WalletDetails.vue'
 import Login from '../pages/Login.vue'
 import Register from '../pages/Register.vue'
 import Admin from '../pages/Admin.vue'
+import Calculator from '../pages/Calculator.vue'
 
 const routes = [{
         path: '/',
@@ -48,7 +49,12 @@ const routes = [{
     {
         path: '/:catchAll(.*)',
         redirect: '/'
-    }
+    },
+    {
+        path: '/calulator',
+        name: 'Calcullator',
+        component: Calculator,
+    },
 ]
 
 const router = createRouter({
