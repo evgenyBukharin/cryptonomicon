@@ -50,6 +50,7 @@ $utilities: map-merge(
                             map-get(map-get($utilities, "top"), "values"),
                             (
                                 5: 5%,
+                                45: 45%,
                                 95: 95%,
                             )
                         ),

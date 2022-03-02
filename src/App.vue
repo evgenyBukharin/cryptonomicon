@@ -15,6 +15,9 @@
                     <router-link class="nav-link" to="/topList">Топ-лист</router-link>
                 </li>
                 <li class="nav-item">
+                    <router-link class="nav-link" to="/calulator">Калькулятор</router-link>
+                </li>
+                <li class="nav-item">
                     <router-link class="nav-link" to="/news">Новости</router-link>
                 </li>
                 <li class="nav-item" v-if="isUserLogged">

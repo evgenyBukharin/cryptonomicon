@@ -1,27 +1,19 @@
 <template>
     <div class="d-flex align-items-center mb-2">
-        <h1 class="mb-0">Страница {{ walletData.CoinName }}</h1>
+        <h1 class="mb-0">Данные о {{ walletName }}</h1>
         <img
+            v-if="walletData.imageUrl !== undefined"
             class="ms-2"
             style="width: 40px; height: 40px"
             v-bind:src="'https://www.cryptocompare.com' + walletData.ImageUrl"
-            :alt="walletData.FullName + ' image'"
         />
     </div>
     <p class="card-text">
-        <span v-if="walletData.AssetLaunchDate" class="d-block"
-            >Дата создания валюты: {{ walletData.AssetLaunchDate }}</span
-        >
-        <span v-if="walletData.Algorithm" class="d-block"
-            >Валюта хэшируется с помощью алгоритма
-            {{ walletData.Algorithm }}</span
-        >
-        <span v-if="walletData.TotalCoinsMined" class="d-block"
-            >Всего добыто {{ walletData.TotalCoinsMined }} единиц валюты</span
-        >
+        <span v-if="walletData.AssetLaunchDate" class="d-block">Дата создания валюты: {{ walletData.AssetLaunchDate }}</span>
+        <span v-if="walletData.Algorithm" class="d-block">Валюта хэшируется с помощью алгоритма {{ walletData.Algorithm }}</span>
+        <span v-if="walletData.TotalCoinsMined" class="d-block">Всего добыто {{ walletData.TotalCoinsMined }} единиц валюты</span>
         <span v-if="walletData.Rating" class="d-block"
-            >Оценка адаптивности к различным алгоритмам:
-            {{ walletData.Rating.Weiss.TechnologyAdoptionRating }}</span
+            >Оценка адаптивности к различным алгоритмам: {{ walletData.Rating.Weiss.TechnologyAdoptionRating }}</span
         >
     </p>
     <div class="d-flex align-items-center">
@@ -34,9 +26,7 @@
             placeholder="Введите количество дней"
             @keydown.enter="updateGraphData(this.graphDays)"
         />
-        <div class="btn btn-success" @click="updateGraphData(this.graphDays)">
-            Показать
-        </div>
+        <div class="btn btn-success" @click="updateGraphData(this.graphDays)">Показать</div>
     </div>
     <Wallet-graph
         :selectedTicker="{ name: this.walletName, dependence: 'USD' }"
@@ -62,9 +52,7 @@ export default {
     components: { WalletGraph },
     methods: {
         async getGraphData(limit) {
-            const f = await fetch(
-                `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${this.walletName}&tsym=USD&limit=${limit}`
-            );
+            const f = await fetch(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${this.walletName}&tsym=USD&limit=${limit}`);
             const data = await f.json();
             this.graphData = [];
             data.Data.Data.forEach((coinData) => {
@@ -72,9 +60,7 @@ export default {
             });
         },
         async getWalletData() {
-            const f = await fetch(
-                `https://min-api.cryptocompare.com/data/all/coinlist?fsym=${this.walletName}`
-            );
+            const f = await fetch(`https://min-api.cryptocompare.com/data/all/coinlist?fsym=${this.walletName}`);
             const data = await f.json();
             this.walletData = data.Data[this.walletName];
             console.log(this.walletData);

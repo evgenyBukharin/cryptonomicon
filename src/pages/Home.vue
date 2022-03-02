@@ -30,7 +30,9 @@
                     @click="selectTicker(t)"
                 >
                     <div class="card-body d-flex flex-column">
-                        <h3 class="card-title text-center">{{ t.name }} - {{ t.dependence }}</h3>
+                        <h3 class="card-title text-center">
+                            <router-link :to="/wallet/ + t.name"> {{ t.name }} </router-link> - {{ t.dependence }}
+                        </h3>
                         <h4 class="card-title text-center">{{ t.price }}</h4>
                         <button
                             @click.stop="deleteTicker(t)"

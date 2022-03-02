@@ -1,18 +1,33 @@
 <template>
     <div v-if="selectedTicker !== null" class="mt-3 mb-3 w-100">
         <div class="graph position-relative d-flex align-items-end border border-2 border-primary border-top-0 border-end-0">
-            <div class="position-absolute top-5 start-0 graph-scale_text">
+            <div v-if="this.graph.length > 1" class="position-absolute top-0 start-0 graph-scale_text">
                 {{ maxValue }}
             </div>
-            <span class="position-absolute top-5 start-0 graph-scale" style="height: 3px; width: 20px; background-color: black"></span>
-            <div class="position-absolute top-50 start-0 graph-scale_text">
+            <span
+                v-if="this.graph.length > 1"
+                class="position-absolute top-0 start-0 graph-scale"
+                style="height: 3px; width: 20px; background-color: black"
+            ></span>
+
+            <div v-if="this.graph.length > 1" class="position-absolute top-45 start-0 graph-scale_text">
                 {{ middleValue }}
             </div>
-            <span class="position-absolute top-50 start-0 graph-scale" style="height: 3px; width: 20px; background-color: black"></span>
-            <div class="position-absolute top-95 start-0 graph-scale_text">
+            <span
+                v-if="this.graph.length > 1"
+                class="position-absolute top-45 start-0 graph-scale"
+                style="height: 3px; width: 20px; background-color: black"
+            ></span>
+
+            <div v-if="this.graph.length > 1" class="position-absolute top-95 start-0 graph-scale_text">
                 {{ minValue }}
             </div>
-            <span class="position-absolute top-95 start-0 graph-scale" style="height: 3px; width: 20px; background-color: black"></span>
+            <span
+                v-if="this.graph.length > 1"
+                class="position-absolute top-95 start-0 graph-scale"
+                style="height: 3px; width: 20px; background-color: black"
+            ></span>
+
             <span
                 v-for="(graphSel, i) in normalizeGraph()"
                 :key="i"
@@ -108,7 +123,7 @@ export default {
     height: 500px;
 }
 .graph-scale_text {
-    margin-left: -80px;
+    margin-left: -85px;
     transform: translateY(-50%);
 }
 .graph-scale {
