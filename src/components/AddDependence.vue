@@ -26,6 +26,7 @@
                         id="recipient-name"
                         placeholder="Введите название валюты..."
                         v-model="newDependence"
+                        @input="this.newDependence = this.newDependence.toUpperCase()"
                     />
                 </div>
                 <div class="modal-footer">

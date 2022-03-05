@@ -1,5 +1,6 @@
 <template>
     <h1>Добавить тикет</h1>
+
     <div class="d-flex w-75">
         <Add-button @click="add" type="button" />
         <input
@@ -20,6 +21,7 @@
             </option></select
         ><Add-dependence @addDependence="addNewDependence" />
     </div>
+
     <div v-if="walletMatches.length > 0" class="d-flex my-3 w-40">
         <div class="me-3" v-for="(match, i) in walletMatches" :key="i">
             <button
@@ -40,6 +42,7 @@
             "
         />
     </div>
+
 </template>
 <script>
 import AddButton from "./AddButton.vue";

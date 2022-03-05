@@ -1,5 +1,6 @@
 <template>
     <Add-ticker @add-ticker="add" />
+
     <div class="d-flex align-items-center mt-3">
         <h5 class="mb-0 me-2">Фильтр:</h5>
         <input
@@ -13,7 +14,9 @@
             placeholder="Название валюты"
         />
     </div>
+
     <hr class="mb-3 mt-3" />
+
     <div v-if="this.tickers.length > 0" class="mb-3">
         <button class="btn btn-success me-2" @click="this.page--" :disabled="this.page == 1">Назад</button>
         <button class="btn btn-success" @click="this.page++" :disabled="!this.hasNextPage">Вперед</button>

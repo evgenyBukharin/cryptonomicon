@@ -2,7 +2,13 @@
     <div>
         <h1 class="mb-3">Конвертер валют</h1>
         <div class="col-8 d-flex justify-content-between">
-            <div class="d-flex flex-wrap">
+            <div
+                class="d-flex flex-wrap"
+                :class="{
+                    'order-1': this.swapPlaces == false,
+                    'order-3': this.swapPlaces == true,
+                }"
+            >
                 <div class="d-flex align-items-center">
                     <h4 class="me-2">У меня есть</h4>
                     <select class="form-select converter__select" v-model="firstWallet" @change="changeWalletsChoise">
@@ -26,8 +32,14 @@
                     <h5 class="m-0">1 {{ firstWallet }} = {{ secondWalletCourse }} {{ secondWallet }}</h5>
                 </div>
             </div>
-            <div class="converter__transfer col-2 mx-4 mt-4"></div>
-            <div class="d-flex flex-wrap">
+            <div class="converter__transfer col-2 mx-4 mt-4 order-2 cursor-pointer" @click="changeSwapPlaces" style="width: 80px"></div>
+            <div
+                class="d-flex flex-wrap"
+                :class="{
+                    'order-1': this.swapPlaces == true,
+                    'order-3': this.swapPlaces == false,
+                }"
+            >
                 <div class="d-flex align-items-center">
                     <h4 class="me-2">Хочу купить</h4>
                     <select class="form-select converter__select" v-model="secondWallet" @change="changeWalletsChoise">
@@ -66,6 +78,7 @@ export default {
             secondWalletCourse: null,
             firstMultiplyed: null,
             secondMultiplyed: null,
+            swapPlaces: false,
         };
     },
     components: { AddDependence },
@@ -95,6 +108,10 @@ export default {
         async changeFirstMylptiplyer() {
             this.secondMultiplyed = this.secondWalletCourse * this.firstMultiplyed;
         },
+        changeSwapPlaces() {
+            this.swapPlaces = !this.swapPlaces;
+            console.log(this.swapPlaces);
+        },
     },
     async created() {
         const func = await fetch(
@@ -123,5 +140,14 @@ export default {
 }
 .converter__values::placeholder {
     font-size: 18px;
+}
+.order-1 {
+    order: 1;
+}
+.order-2 {
+    order: 2;
+}
+.order-3 {
+    order: 3;
 }
 </style>
