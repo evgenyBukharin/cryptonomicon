@@ -51,8 +51,8 @@ const routes = [{
         redirect: '/'
     },
     {
-        path: '/calulator',
-        name: 'Calcullator',
+        path: '/converter',
+        name: 'Converter',
         component: Converter,
     },
 ]

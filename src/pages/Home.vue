@@ -1,6 +1,5 @@
 <template>
     <Add-ticker @add-ticker="add" />
-
     <div class="d-flex align-items-center mt-3">
         <h5 class="mb-0 me-2">Фильтр:</h5>
         <input
@@ -17,7 +16,7 @@
 
     <hr class="mb-3 mt-3" />
 
-    <div v-if="this.tickers.length > 0" class="mb-3">
+    <div v-if="this.$store.state.tickers.length > 0" class="mb-3">
         <button class="btn btn-success me-2" @click="this.page--" :disabled="this.page == 1">Назад</button>
         <button class="btn btn-success" @click="this.page++" :disabled="!this.hasNextPage">Вперед</button>
     </div>
@@ -70,7 +69,6 @@ export default {
     props: ["userId"],
     data() {
         return {
-            tickers: [],
             tickersPerPage: 8,
             selectedTicker: null,
             graphData: [],
@@ -90,14 +88,14 @@ export default {
                 price: "-",
                 dependence: tickerDependence,
             };
-            this.tickers = [...this.tickers, currentTicker];
+            this.$store.state.tickers.push(currentTicker);
             this.subscribeOnUpdates(currentTicker);
-            localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(this.tickers));
+            localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(this.$store.state.tickers));
             this.ticker = "";
             this.filter = "";
         },
         deleteTicker(tickerToDelete) {
-            this.tickers.splice(this.tickers.indexOf(tickerToDelete), 1);
+            this.$store.state.tickers.splice(this.$store.state.tickers.indexOf(tickerToDelete), 1);
             if (tickerToDelete.name == this.selectedTicker?.name && tickerToDelete.dependence == this.selectedTicker?.dependence) {
                 this.selectedTicker = null;
                 this.graphData = [];
@@ -114,7 +112,7 @@ export default {
         },
         alreadyExists(ticker, dependence) {
             let v = false;
-            this.tickers.forEach((t) => {
+            this.$store.state.tickers.forEach((t) => {
                 if (t.name == ticker && t.dependence == dependence) {
                     v = true;
                 }
@@ -129,7 +127,7 @@ export default {
                 const data = await func.json();
                 if (data.Response == "Error") {
                     clearInterval(intervalId);
-                    this.tickers.splice(this.tickers.indexOf(ticker), 1);
+                    this.$store.state.tickers.splice(this.$store.state.tickers.indexOf(ticker), 1);
                     let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
                     storagedTickers.splice(
                         storagedTickers.findIndex((t) => {
@@ -139,12 +137,12 @@ export default {
                     );
                     localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
                 }
-                this.tickers.find((t) => t.name === ticker.name && t.dependence == ticker.dependence).price =
+                this.$store.state.tickers.find((t) => t.name === ticker.name && t.dependence == ticker.dependence).price =
                     data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
                 if (ticker.name == this.selectedTicker?.name && ticker.dependence == this.selectedTicker?.dependence) {
                     this.graphData.push(data[ticker.dependence]);
                 }
-                this.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
+                this.$store.state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
             }, 5000);
             return intervalId;
         },
@@ -155,7 +153,7 @@ export default {
             }
         },
         filteredTickers() {
-            const filteredTickers = this.tickers.filter((ticker) => ticker.name.includes(this.filter));
+            const filteredTickers = this.$store.state.tickers.filter((ticker) => ticker.name.includes(this.filter));
             this.hasNextPage = filteredTickers.length > this.end;
             return filteredTickers.slice(this.start, this.end);
         },
@@ -172,16 +170,16 @@ export default {
         let savedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
         if (savedTickers?.length > 0) {
             savedTickers.forEach((ticker) => {
-                this.tickers.push(ticker);
+                this.$store.state.tickers.push(ticker);
             });
         }
-        this.tickers.forEach((t) => {
+        this.$store.state.tickers.forEach((t) => {
             this.subscribeOnUpdates(t);
         });
     },
     watch: {
         $route() {
-            this.tickers.forEach((ticker) => {
+            this.$store.state.tickers.forEach((ticker) => {
                 clearInterval(ticker.intId);
             });
         },

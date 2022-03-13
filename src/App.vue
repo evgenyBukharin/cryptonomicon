@@ -15,7 +15,7 @@
                     <router-link class="nav-link" to="/topList">Топ-лист</router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link class="nav-link" to="/calulator">Конвертер</router-link>
+                    <router-link class="nav-link" to="/converter">Конвертер</router-link>
                 </li>
                 <li class="nav-item">
                     <router-link class="nav-link" to="/news">Новости</router-link>
