@@ -3,10 +3,10 @@
     <div class="d-flex align-items-center mt-3">
         <h5 class="mb-0 me-2">Фильтр:</h5>
         <input
-            v-model.trim="filter"
+            v-model.trim="$store.state.filter"
             @input="
-                this.filter = filter.toUpperCase();
-                this.page = 1;
+                $store.state.filter = $tore.filter.toUpperCase();
+                $store.state.page = 1;
             "
             type="text"
             class="form-control form-control-md w-15"
@@ -17,8 +17,8 @@
     <hr class="mb-3 mt-3" />
 
     <div v-if="this.$store.state.tickers.length > 0" class="mb-3">
-        <button class="btn btn-success me-2" @click="this.page--" :disabled="this.page == 1">Назад</button>
-        <button class="btn btn-success" @click="this.page++" :disabled="!this.hasNextPage">Вперед</button>
+        <button class="btn btn-success me-2" @click="$store.state.page--" :disabled="$store.state.page == 1">Назад</button>
+        <button class="btn btn-success" @click="$store.state.page++" :disabled="!$store.state.hasNextPage">Вперед</button>
     </div>
 
     <div class="container">
@@ -27,7 +27,7 @@
                 <div
                     class="card border-4"
                     :class="{
-                        'border-primary': selectedTicker == t,
+                        'border-primary': $store.state.selectedTicker == t,
                     }"
                     @click="selectTicker(t)"
                 >
@@ -40,8 +40,8 @@
                             @click.stop="deleteTicker(t)"
                             class="btn"
                             :class="{
-                                'btn-primary': selectedTicker == t,
-                                'btn-secondary': selectedTicker !== t,
+                                'btn-primary': $store.state.selectedTicker == t,
+                                'btn-secondary': $store.state.selectedTicker !== t,
                             }"
                         >
                             Удалить
@@ -51,14 +51,7 @@
             </div>
         </div>
     </div>
-    <Wallet-graph
-        :selectedTicker="this.selectedTicker"
-        :graphValues="this.graphData"
-        :btnVisible="true"
-        :graphSelWidth="'20px'"
-        @clearSelectedTicker="this.selectedTicker = null"
-        :title="false"
-    />
+    <Wallet-graph :btnVisible="true" :graphSelWidth="'20px'" :title="false" />
 </template>
 <script>
 import AddTicker from "../components/AddTicker.vue";
@@ -67,16 +60,6 @@ export default {
     name: "App",
     components: { AddTicker, WalletGraph },
     props: ["userId"],
-    data() {
-        return {
-            tickersPerPage: 8,
-            selectedTicker: null,
-            graphData: [],
-            page: 1,
-            filter: "",
-            hasNextPage: false,
-        };
-    },
     methods: {
         add(ticker, tickerDependence) {
             // Проверка на существование тикера
@@ -91,14 +74,17 @@ export default {
             this.$store.state.tickers.push(currentTicker);
             this.subscribeOnUpdates(currentTicker);
             localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(this.$store.state.tickers));
-            this.ticker = "";
-            this.filter = "";
+            this.$store.state.ticker = "";
+            this.$store.state.filter = "";
         },
         deleteTicker(tickerToDelete) {
             this.$store.state.tickers.splice(this.$store.state.tickers.indexOf(tickerToDelete), 1);
-            if (tickerToDelete.name == this.selectedTicker?.name && tickerToDelete.dependence == this.selectedTicker?.dependence) {
-                this.selectedTicker = null;
-                this.graphData = [];
+            if (
+                tickerToDelete.name == this.$store.state.selectedTicker?.name &&
+                tickerToDelete.dependence == this.$store.state.selectedTicker?.dependence
+            ) {
+                this.$store.state.selectedTicker = null;
+                this.$store.state.graphData = [];
             }
             clearInterval(tickerToDelete.intId);
             let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
@@ -139,31 +125,34 @@ export default {
                 }
                 this.$store.state.tickers.find((t) => t.name === ticker.name && t.dependence == ticker.dependence).price =
                     data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
-                if (ticker.name == this.selectedTicker?.name && ticker.dependence == this.selectedTicker?.dependence) {
-                    this.graphData.push(data[ticker.dependence]);
+                if (
+                    ticker.name == this.$store.state.selectedTicker?.name &&
+                    ticker.dependence == this.$store.state.selectedTicker?.dependence
+                ) {
+                    this.$store.state.graphData.push(data[ticker.dependence]);
                 }
                 this.$store.state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
-            }, 5000);
+            }, 2000);
             return intervalId;
         },
         selectTicker(tickerToSelect) {
-            if (this.selectedTicker !== tickerToSelect) {
-                this.graphData = [];
-                this.selectedTicker = tickerToSelect;
+            if (this.$store.state.selectedTicker !== tickerToSelect) {
+                this.$store.state.selectedTicker = tickerToSelect;
+                this.$store.state.graphData = [];
             }
         },
         filteredTickers() {
-            const filteredTickers = this.$store.state.tickers.filter((ticker) => ticker.name.includes(this.filter));
-            this.hasNextPage = filteredTickers.length > this.end;
+            const filteredTickers = this.$store.state.tickers.filter((ticker) => ticker.name.includes(this.$store.state.filter));
+            this.$store.state.hasNextPage = filteredTickers.length > this.end;
             return filteredTickers.slice(this.start, this.end);
         },
     },
     computed: {
         start() {
-            return (this.page - 1) * this.tickersPerPage;
+            return (this.$store.state.page - 1) * this.$store.state.tickersPerPage;
         },
         end() {
-            return this.page * this.tickersPerPage;
+            return this.$store.state.page * this.$store.state.tickersPerPage;
         },
     },
     created() {

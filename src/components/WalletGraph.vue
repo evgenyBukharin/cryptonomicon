@@ -1,29 +1,29 @@
 <template>
-    <div v-if="selectedTicker !== null" class="mt-3 mb-3 w-100">
+    <div v-if="$store.state.selectedTicker !== null" class="mt-3 mb-3 w-100">
         <div class="graph position-relative d-flex align-items-end border border-2 border-primary border-top-0 border-end-0">
-            <div v-if="this.graph.length > 1" class="position-absolute top-0 start-0 graph-scale_text">
+            <div v-if="$store.state.graph.length > 1" class="position-absolute top-0 start-0 graph-scale_text">
                 {{ maxValue }}
             </div>
             <span
-                v-if="this.graph.length > 1"
+                v-if="$store.state.graph.length > 1"
                 class="position-absolute top-0 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
 
-            <div v-if="this.graph.length > 1" class="position-absolute top-45 start-0 graph-scale_text">
+            <div v-if="$store.state.graph.length > 1" class="position-absolute top-45 start-0 graph-scale_text">
                 {{ middleValue }}
             </div>
             <span
-                v-if="this.graph.length > 1"
+                v-if="$store.state.graph.length > 1"
                 class="position-absolute top-45 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
 
-            <div v-if="this.graph.length > 1" class="position-absolute top-95 start-0 graph-scale_text">
+            <div v-if="$store.state.graph.length > 1" class="position-absolute top-95 start-0 graph-scale_text">
                 {{ minValue }}
             </div>
             <span
-                v-if="this.graph.length > 1"
+                v-if="$store.state.graph.length > 1"
                 class="position-absolute top-95 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
@@ -33,12 +33,12 @@
                 :key="i"
                 class="bg-primary"
                 :style="{ height: graphSel + '%', width: this.graphSelWidth }"
-                :value="this.graphData[i]"
-                @mouseover="createHover(this.graphData[i], this.selectedTicker.dependence)"
+                :value="$store.state.graphData[i]"
+                @mouseover="createHover($store.state.graphData[i], $store.state.selectedTicker.dependence)"
                 @mousemove="(event) => holdHover(event)"
                 @mouseleave="(event) => deleteHover(event)"
             ></span>
-            <span v-show="graph.length < 10" style="height: 100%; width: 1px"></span>
+            <span v-show="$store.state.graph.length < 10" style="height: 100%; width: 1px"></span>
             <img
                 v-if="btnVisible"
                 src="../assets/cancel.png"
@@ -55,25 +55,15 @@
 </template>
 <script>
 export default {
-    data() {
-        return {
-            graph: [],
-            graphData: [],
-        };
-    },
-    props: ["selectedTicker", "graphValues", "btnVisible", "graphSelWidth", "title"],
-    emits: {
-        clearSelectedTicker: null,
-    },
+    props: ["btnVisible", "graphSelWidth", "title"],
     methods: {
         closeGraph() {
-            this.graph = [];
-            this.$emit("clearSelectedTicker");
+            this.$store.state.graph = [];
+            this.$store.state.selectedTicker = null;
         },
         normalizeGraph() {
-            this.graphData = this.graphValues;
-            this.graph = this.graphValues;
-            return this.graph.map((value) => {
+            this.$store.state.graph = this.$store.state.grapData;
+            return this.$store.state.graph.map((value) => {
                 return ((value - this.minValue) * 95) / (this.maxValue - this.minValue) + 5;
             });
         },
@@ -107,10 +97,10 @@ export default {
     },
     computed: {
         minValue() {
-            return Math.min(...this.graph);
+            return Math.min(...this.$store.state.graph);
         },
         maxValue() {
-            return Math.max(...this.graph);
+            return Math.max(...this.$store.state.graph);
         },
         middleValue() {
             return ((this.maxValue - this.minValue) / 2 + this.minValue).toFixed(2);

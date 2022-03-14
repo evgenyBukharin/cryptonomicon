@@ -28,8 +28,9 @@
         />
         <div class="btn btn-success" @click="updateGraphData(this.graphDays)">Показать</div>
     </div>
+    <!-- Строка ниже была в пропсах графика до vuex -->
+    <!-- :selectedTicker="{ name: this.walletName, dependence: 'USD' }" -->
     <Wallet-graph
-        :selectedTicker="{ name: this.walletName, dependence: 'USD' }"
         :graphValues="this.graphData"
         @clearSelectedTicker="this.selectedTicker = null"
         :btnVisible="false"
