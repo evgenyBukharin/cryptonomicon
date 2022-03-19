@@ -18,7 +18,7 @@
             Добавить
         </button>
         <input
-            v-model="this.$store.state.ticker"
+            v-model="$store.state.ticker"
             @input="findMatches()"
             @keydown.enter="add"
             type="text"
@@ -30,14 +30,14 @@
             <option v-for="(wallet, i) in $store.state.walletList" :key="i" :value="wallet">
                 {{ wallet }}
             </option></select
-        ><Add-dependence @addDependence="addNewDependence" />
+        ><Add-dependence />
     </div>
 
     <div v-if="$store.state.walletMatches.length > 0" class="d-flex my-3 w-40">
         <div class="me-3" v-for="(match, i) in $store.state.walletMatches" :key="i">
             <button
                 class="btn btn-secondary text-white rounded-3 text-uppercase"
-                @click="addTicker(match)"
+                @click="$store.commit('addMatchedTicker', match)"
                 :id="'autocompleteBtn' + (i + 1)"
             >
                 {{ match }}
@@ -47,10 +47,7 @@
             style="width: 14px; height: 14px"
             class="cursor-pointer"
             src="../assets/cancel.png"
-            @click="
-                this.$store.state.walletMatches = [];
-                this.$store.state.ticker = '';
-            "
+            @click="$store.commit('closeMatchesBlock')"
         />
     </div>
 </template>
@@ -58,20 +55,22 @@
 import AddDependence from "./AddDependence.vue";
 export default {
     components: { AddDependence },
-    emits: {
-        "add-ticker": (value) => typeof value === "string",
-    },
     methods: {
         add() {
             if (this.$store.state.ticker.length === 0) {
                 return;
             }
-            this.$emit("add-ticker", this.$store.state.ticker, this.$store.state.tickerDependence);
-            this.$store.state.ticker = "";
-        },
-        addTicker(match) {
-            this.$emit("add-ticker", match, this.$store.state.tickerDependence);
-            this.$store.state.ticker = "";
+            if (this.alreadyExists(this.$store.state.ticker, this.$store.state.tickerDependence)) {
+                return;
+            }
+            const currentTicker = {
+                name: this.$store.state.ticker,
+                price: "-",
+                dependence: this.$store.state.tickerDependence,
+            };
+            this.$store.commit("addTicker", currentTicker);
+            this.subscribeOnUpdates(currentTicker);
+            localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(this.$store.state.tickers));
         },
         async getAllWallets() {
             const func = await fetch(
@@ -83,6 +82,15 @@ export default {
                     this.$store.state.allWallets.push(data.Data[coin].Symbol);
                 }
             }
+        },
+        alreadyExists(ticker, dependence) {
+            let v = false;
+            this.$store.state.tickers.forEach((t) => {
+                if (t.name == ticker && t.dependence == dependence) {
+                    v = true;
+                }
+            });
+            return v;
         },
         findMatches() {
             if (this.$store.state.ticker.length == 0) {
@@ -104,9 +112,6 @@ export default {
         },
         shuffle(array) {
             array.sort(() => Math.random() - 0.5);
-        },
-        addNewDependence(newDependence) {
-            this.$store.state.walletList.push(newDependence);
         },
     },
     created() {

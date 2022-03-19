@@ -25,39 +25,21 @@
                         class="form-control"
                         id="recipient-name"
                         placeholder="Введите название валюты..."
-                        v-model="newDependence"
-                        @input="this.newDependence = this.newDependence.toUpperCase()"
+                        v-model="$store.state.newDependence"
+                        @input="$store.commit('newDepInputHandle')"
                     />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary" @click="addNewDependence" data-bs-dismiss="modal">Добавить</button>
+                    <button type="button" class="btn btn-primary" @click="$store.commit('addNewDependence')" data-bs-dismiss="modal">
+                        Добавить
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-export default {
-    data() {
-        return {
-            newDependence: "",
-        };
-    },
-    emits: {
-        addDependence: (newDependence) => {
-            if (newDependence.lenght !== 0) {
-                return true;
-            } else {
-                return false;
-            }
-        },
-    },
-    methods: {
-        addNewDependence() {
-            this.$emit("addDependence", this.newDependence);
-        },
-    },
-};
+export default {};
 </script>
 <style lang=""></style>

@@ -1,13 +1,10 @@
 <template>
-    <Add-ticker @add-ticker="add" />
+    <Add-ticker />
     <div class="d-flex align-items-center mt-3">
         <h5 class="mb-0 me-2">Фильтр:</h5>
         <input
             v-model.trim="$store.state.filter"
-            @input="
-                $store.state.filter = $tore.filter.toUpperCase();
-                $store.state.page = 1;
-            "
+            @input="$store.commit('filterInputHandle')"
             type="text"
             class="form-control form-control-md w-15"
             placeholder="Название валюты"
@@ -16,9 +13,9 @@
 
     <hr class="mb-3 mt-3" />
 
-    <div v-if="this.$store.state.tickers.length > 0" class="mb-3">
-        <button class="btn btn-success me-2" @click="$store.state.page--" :disabled="$store.state.page == 1">Назад</button>
-        <button class="btn btn-success" @click="$store.state.page++" :disabled="!$store.state.hasNextPage">Вперед</button>
+    <div v-if="$store.state.tickers.length > 0" class="mb-3">
+        <button class="btn btn-success me-2" @click="$store.commit('minusPage')" :disabled="$store.state.page == 1">Назад</button>
+        <button class="btn btn-success" @click="$store.commit('plusPage')" :disabled="!$store.state.hasNextPage">Вперед</button>
     </div>
 
     <div class="container">
@@ -29,7 +26,7 @@
                     :class="{
                         'border-primary': $store.state.selectedTicker == t,
                     }"
-                    @click="selectTicker(t)"
+                    @click="$store.commit('setSelectedTicker', t)"
                 >
                     <div class="card-body d-flex flex-column">
                         <h3 class="card-title text-center">
@@ -61,31 +58,8 @@ export default {
     components: { AddTicker, WalletGraph },
     props: ["userId"],
     methods: {
-        add(ticker, tickerDependence) {
-            // Проверка на существование тикера
-            if (this.alreadyExists(ticker, tickerDependence)) {
-                return;
-            }
-            const currentTicker = {
-                name: ticker,
-                price: "-",
-                dependence: tickerDependence,
-            };
-            this.$store.state.tickers.push(currentTicker);
-            this.subscribeOnUpdates(currentTicker);
-            localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(this.$store.state.tickers));
-            this.$store.state.ticker = "";
-            this.$store.state.filter = "";
-        },
         deleteTicker(tickerToDelete) {
-            this.$store.state.tickers.splice(this.$store.state.tickers.indexOf(tickerToDelete), 1);
-            if (
-                tickerToDelete.name == this.$store.state.selectedTicker?.name &&
-                tickerToDelete.dependence == this.$store.state.selectedTicker?.dependence
-            ) {
-                this.$store.state.selectedTicker = null;
-                this.$store.state.graphData = [];
-            }
+            this.$store.commit("handleDeleteTicker");
             clearInterval(tickerToDelete.intId);
             let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
             storagedTickers.splice(
@@ -96,15 +70,6 @@ export default {
             );
             localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
         },
-        alreadyExists(ticker, dependence) {
-            let v = false;
-            this.$store.state.tickers.forEach((t) => {
-                if (t.name == ticker && t.dependence == dependence) {
-                    v = true;
-                }
-            });
-            return v;
-        },
         subscribeOnUpdates(ticker) {
             let intervalId = setInterval(async () => {
                 const func = await fetch(
@@ -113,7 +78,7 @@ export default {
                 const data = await func.json();
                 if (data.Response == "Error") {
                     clearInterval(intervalId);
-                    this.$store.state.tickers.splice(this.$store.state.tickers.indexOf(ticker), 1);
+                    this.$store.commit("handleFetchError");
                     let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
                     storagedTickers.splice(
                         storagedTickers.findIndex((t) => {
@@ -123,6 +88,7 @@ export default {
                     );
                     localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
                 }
+                // this.$store.commit("handleWalletFormat", ticker)
                 this.$store.state.tickers.find((t) => t.name === ticker.name && t.dependence == ticker.dependence).price =
                     data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
                 if (
@@ -134,12 +100,6 @@ export default {
                 this.$store.state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
             }, 2000);
             return intervalId;
-        },
-        selectTicker(tickerToSelect) {
-            if (this.$store.state.selectedTicker !== tickerToSelect) {
-                this.$store.state.selectedTicker = tickerToSelect;
-                this.$store.state.graphData = [];
-            }
         },
         filteredTickers() {
             const filteredTickers = this.$store.state.tickers.filter((ticker) => ticker.name.includes(this.$store.state.filter));

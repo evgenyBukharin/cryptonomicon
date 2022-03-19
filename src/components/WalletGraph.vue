@@ -1,29 +1,29 @@
 <template>
     <div v-if="$store.state.selectedTicker !== null" class="mt-3 mb-3 w-100">
         <div class="graph position-relative d-flex align-items-end border border-2 border-primary border-top-0 border-end-0">
-            <div v-if="$store.state.graph.length > 1" class="position-absolute top-0 start-0 graph-scale_text">
+            <div v-if="$store.state.graph.length > 2" class="position-absolute top-0 start-0 graph-scale_text">
                 {{ maxValue }}
             </div>
             <span
-                v-if="$store.state.graph.length > 1"
+                v-if="$store.state.graph.length > 2"
                 class="position-absolute top-0 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
 
-            <div v-if="$store.state.graph.length > 1" class="position-absolute top-45 start-0 graph-scale_text">
+            <div v-if="$store.state.graph.length > 2" class="position-absolute top-45 start-0 graph-scale_text">
                 {{ middleValue }}
             </div>
             <span
-                v-if="$store.state.graph.length > 1"
+                v-if="$store.state.graph.length > 2"
                 class="position-absolute top-45 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
 
-            <div v-if="$store.state.graph.length > 1" class="position-absolute top-95 start-0 graph-scale_text">
+            <div v-if="$store.state.graph.length > 2" class="position-absolute top-95 start-0 graph-scale_text">
                 {{ minValue }}
             </div>
             <span
-                v-if="$store.state.graph.length > 1"
+                v-if="$store.state.graph.length > 2"
                 class="position-absolute top-95 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
@@ -62,7 +62,7 @@ export default {
             this.$store.state.selectedTicker = null;
         },
         normalizeGraph() {
-            this.$store.state.graph = this.$store.state.grapData;
+            this.$store.state.graph = this.$store.state.graphData;
             return this.$store.state.graph.map((value) => {
                 return ((value - this.minValue) * 95) / (this.maxValue - this.minValue) + 5;
             });
@@ -113,7 +113,9 @@ export default {
     height: 500px;
 }
 .graph-scale_text {
-    margin-left: -85px;
+    width: 80px;
+    text-align: end;
+    margin-left: -100px;
     transform: translateY(-50%);
 }
 .graph-scale {
