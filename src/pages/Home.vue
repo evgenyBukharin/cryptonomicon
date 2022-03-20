@@ -70,37 +70,6 @@ export default {
             );
             localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
         },
-        subscribeOnUpdates(ticker) {
-            let intervalId = setInterval(async () => {
-                const func = await fetch(
-                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
-                );
-                const data = await func.json();
-                if (data.Response == "Error") {
-                    clearInterval(intervalId);
-                    this.$store.commit("handleFetchError");
-                    let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
-                    storagedTickers.splice(
-                        storagedTickers.findIndex((t) => {
-                            ticker.name == t.name && ticker.dependence == t.name;
-                        }),
-                        1
-                    );
-                    localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
-                }
-                // this.$store.commit("handleWalletFormat", ticker)
-                this.$store.state.tickers.find((t) => t.name === ticker.name && t.dependence == ticker.dependence).price =
-                    data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
-                if (
-                    ticker.name == this.$store.state.selectedTicker?.name &&
-                    ticker.dependence == this.$store.state.selectedTicker?.dependence
-                ) {
-                    this.$store.state.graphData.push(data[ticker.dependence]);
-                }
-                this.$store.state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
-            }, 2000);
-            return intervalId;
-        },
         filteredTickers() {
             const filteredTickers = this.$store.state.tickers.filter((ticker) => ticker.name.includes(this.$store.state.filter));
             this.$store.state.hasNextPage = filteredTickers.length > this.end;

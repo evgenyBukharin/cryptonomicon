@@ -1,6 +1,4 @@
-import {
-    createStore
-} from 'vuex'
+import { createStore } from "vuex";
 
 export default createStore({
     state: {
@@ -29,36 +27,36 @@ export default createStore({
     },
     mutations: {
         addNewDependence(state) {
-            state.walletList.push(state.newDependence)
+            state.walletList.push(state.newDependence);
         },
         filterInputHangle(state) {
             state.filter = state.filter.toUpperCase();
             state.page = 1;
         },
         newDepInputHandle(state) {
-            state.newDependence = state.newDependence.toUpperCase()
+            state.newDependence = state.newDependence.toUpperCase();
         },
         closeMatchesBlock(state) {
             state.walletMatches = [];
-            state.ticker = '';
+            state.ticker = "";
         },
         addTicker(state, currentTicker) {
-            state.tickers.push(currentTicker)
+            state.tickers.push(currentTicker);
             state.ticker = "";
             state.filter = "";
         },
         addMatchedTicker(state, matchedTicker) {
-            state.tickers.push(matchedTicker)
+            state.tickers.push(matchedTicker);
             state.ticker = "";
         },
         minusPage(state) {
-            state.page--
+            state.page--;
         },
         plusPage(state) {
-            state.page++
+            state.page++;
         },
         handleFetchError(state) {
-            state.tickers.splice(state.tickers.indexOf(state.ticker), 1)
+            state.tickers.splice(state.tickers.indexOf(state.ticker), 1);
         },
         setSelectedTicker(state, tickerToSelect) {
             if (state.selectedTicker !== tickerToSelect) {
@@ -75,9 +73,41 @@ export default createStore({
                 state.selectedTicker = null;
                 state.graphData = [];
             }
+        },
+        subscribeOnUpdates(state, ticker) {
+            let intervalId = setInterval(async () => {
+                const func = await fetch(
+                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
+                );
+                const data = await func.json();
+                if (data.Response == "Error") {
+                    clearInterval(intervalId);
+                    this.$store.commit("handleFetchError");
+                    let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
+                    storagedTickers.splice(
+                        storagedTickers.findIndex((t) => {
+                            ticker.name == t.name && ticker.dependence == t.name;
+                        }),
+                        1
+                    );
+                    localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
+                }
+                state.tickers.find((t) => t.name === ticker.name && t.dependence == ticker.dependence).price =
+                    data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
+                if (
+                    ticker.name == this.$store.state.selectedTicker?.name &&
+                    ticker.dependence == this.$store.state.selectedTicker?.dependence
+                ) {
+                    state.graphData.push(data[ticker.dependence]);
+                }
+                state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
+            }, 2000);
+            return intervalId;
         }
     },
-    actions: {},
+    actions: {
+        
+    },
     getters: {},
-    modules: {}
-})
+    modules: {},
+});
