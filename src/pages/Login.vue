@@ -47,6 +47,9 @@ export default {
             }
         },
     },
+    created() {
+        axios.get("https://api.spotify.com/v1/tracks/0UKQrQDMVcKN3ngG1kthYN?si=f267e8e292d44e1a");
+    },
 };
 </script>
 <style></style>
