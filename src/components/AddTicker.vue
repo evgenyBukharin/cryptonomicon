@@ -37,7 +37,7 @@
         <div class="me-3" v-for="(match, i) in $store.state.walletMatches" :key="i">
             <button
                 class="btn btn-secondary text-white rounded-3 text-uppercase"
-                @click="$store.commit('addMatchedTicker', match)"
+                @click="addMatchedTicker(match)"
                 :id="'autocompleteBtn' + (i + 1)"
             >
                 {{ match }}
@@ -69,7 +69,17 @@ export default {
                 dependence: this.$store.state.tickerDependence,
             };
             this.$store.commit("addTicker", currentTicker);
-            this.subscribeOnUpdates(currentTicker);
+            this.$store.dispatch("subscribeOnUpdates", currentTicker);
+            localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(this.$store.state.tickers));
+        },
+        addMatchedTicker(match) {
+            const matchedTicker = {
+                name: match,
+                price: "-",
+                dependence: this.$store.state.tickerDependence,
+            };
+            this.$store.commit("addMatchedTicker", matchedTicker);
+            this.$store.dispatch("subscribeOnUpdates", matchedTicker);
             localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(this.$store.state.tickers));
         },
         async getAllWallets() {
@@ -79,7 +89,7 @@ export default {
             const data = await func.json();
             for (const coin in data.Data) {
                 if (Object.hasOwnProperty.call(data.Data, coin)) {
-                    this.$store.state.allWallets.push(data.Data[coin].Symbol);
+                    this.$store.commit('updateAllWallets', data.Data[coin].Symbol)
                 }
             }
         },

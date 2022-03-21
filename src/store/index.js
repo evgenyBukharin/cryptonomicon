@@ -65,11 +65,8 @@ export default createStore({
             }
         },
         handleDeleteTicker(state, tickerToDelete) {
-            state.tickers.splice(this.$store.state.tickers.indexOf(tickerToDelete), 1);
-            if (
-                tickerToDelete.name == state.selectedTicker?.name &&
-                tickerToDelete.dependence == state.selectedTicker?.dependence
-            ) {
+            state.tickers.splice(state.tickers.indexOf(tickerToDelete), 1);
+            if (tickerToDelete.name == state.selectedTicker?.name && tickerToDelete.dependence == state.selectedTicker?.dependence) {
                 state.selectedTicker = null;
                 state.graphData = [];
             }
@@ -94,19 +91,24 @@ export default createStore({
                 }
                 state.tickers.find((t) => t.name === ticker.name && t.dependence == ticker.dependence).price =
                     data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
-                if (
-                    ticker.name == this.$store.state.selectedTicker?.name &&
-                    ticker.dependence == this.$store.state.selectedTicker?.dependence
-                ) {
+                if (ticker.name == state.selectedTicker?.name && ticker.dependence == state.selectedTicker?.dependence) {
                     state.graphData.push(data[ticker.dependence]);
                 }
                 state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
             }, 2000);
             return intervalId;
-        }
+        },
+        updateAllWallets(state, wallet) {
+            state.allWallets.push(wallet);
+        },
+        hasNextPageUpdate(state, length, end) {
+            state.hasNextPage = length > end;
+        },
     },
     actions: {
-        
+        subscribeOnUpdates({ commit }, ticker) {
+            commit("subscribeOnUpdates", ticker);
+        },
     },
     getters: {},
     modules: {},

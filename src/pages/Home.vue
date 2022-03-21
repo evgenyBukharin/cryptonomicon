@@ -59,7 +59,7 @@ export default {
     props: ["userId"],
     methods: {
         deleteTicker(tickerToDelete) {
-            this.$store.commit("handleDeleteTicker");
+            this.$store.commit("handleDeleteTicker", tickerToDelete);
             clearInterval(tickerToDelete.intId);
             let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
             storagedTickers.splice(
@@ -71,8 +71,8 @@ export default {
             localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
         },
         filteredTickers() {
-            const filteredTickers = this.$store.state.tickers.filter((ticker) => ticker.name.includes(this.$store.state.filter));
-            this.$store.state.hasNextPage = filteredTickers.length > this.end;
+            const filteredTickers = this.$store.state.tickers.filter((t) => t.name.includes(this.$store.state.filter));
+            this.$store.commit("hasNextPageUpdate", filteredTickers.length, this.end);
             return filteredTickers.slice(this.start, this.end);
         },
     },
@@ -88,11 +88,11 @@ export default {
         let savedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
         if (savedTickers?.length > 0) {
             savedTickers.forEach((ticker) => {
-                this.$store.state.tickers.push(ticker);
+                this.$store.commit("addTicker", ticker);
             });
         }
         this.$store.state.tickers.forEach((t) => {
-            this.subscribeOnUpdates(t);
+            this.$store.dispatch("subscribeOnUpdates", t);
         });
     },
     watch: {
