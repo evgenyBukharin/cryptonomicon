@@ -1,7 +1,7 @@
 <template>
     <Add-ticker />
     <div class="d-flex align-items-center mt-3">
-        <h5 class="mb-0 me-2">Фильтр:</h5>
+        <h5 class="mb-0 me-2">LOOOOOOOOOOl:</h5>
         <input
             v-model.trim="$store.state.filter"
             @input="$store.commit('filterInputHandle')"
