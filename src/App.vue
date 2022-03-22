@@ -20,9 +20,9 @@
                 <li class="nav-item">
                     <router-link class="nav-link" to="/news">Новости</router-link>
                 </li>
-                <li class="nav-item" v-if="isUserLogged">
+                <!-- <li class="nav-item" v-if="isUserLogged">
                     <router-link class="nav-link" to="/login">Войти</router-link>
-                </li>
+                </li> -->
                 <li v-if="showLogoutBtn" class="nav-item" @click="handleLogout"><div class="nav-link">Выйти</div></li>
             </ul>
         </header>
