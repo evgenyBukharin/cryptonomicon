@@ -104,6 +104,28 @@ export default createStore({
         hasNextPageUpdate(state, length, end) {
             state.hasNextPage = length > end;
         },
+        noMatchesHandle(state) {
+            state.walletMatches.length = 0;
+        },
+        clearMatchesArray(state) {
+            state.walletMatches.length = 0;
+        },
+        updateWalletMatches(state) {
+            for (let i = 0; i < state.allWallets.length; i++) {
+                let foundIndex = state.allWallets[i].indexOf(state.ticker);
+                if (foundIndex !== -1) {
+                    state.walletMatches.push(state.allWallets[i]);
+                }
+            }
+        },
+        shuffleWalletMatches(state) {
+            state.walletMatches.sort(() => Math.random() - 0.5);
+        },
+        reduceWalletMatchesLength(state) {
+            if (state.walletMatches.length > 8) {
+                state.walletMatches.length = 8;
+            }
+        },
     },
     actions: {
         subscribeOnUpdates({ commit }, ticker) {

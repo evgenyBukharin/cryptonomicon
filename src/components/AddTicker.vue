@@ -89,39 +89,28 @@ export default {
             const data = await func.json();
             for (const coin in data.Data) {
                 if (Object.hasOwnProperty.call(data.Data, coin)) {
-                    this.$store.commit('updateAllWallets', data.Data[coin].Symbol)
+                    this.$store.commit("updateAllWallets", data.Data[coin].Symbol);
                 }
             }
         },
         alreadyExists(ticker, dependence) {
-            let v = false;
             this.$store.state.tickers.forEach((t) => {
                 if (t.name == ticker && t.dependence == dependence) {
-                    v = true;
+                    return true;
                 }
             });
-            return v;
+            return false;
         },
         findMatches() {
             if (this.$store.state.ticker.length == 0) {
-                this.$store.state.walletMatches.length = 0;
+                this.$store.commit("noMatchesHandle");
                 return;
             }
             this.$store.state.ticker = this.$store.state.ticker.toUpperCase();
-            this.$store.state.walletMatches.length = 0;
-            for (let i = 0; i < this.$store.state.allWallets.length; i++) {
-                let foundIndex = this.$store.state.allWallets[i].indexOf(this.$store.state.ticker);
-                if (foundIndex !== -1) {
-                    this.$store.state.walletMatches.push(this.$store.state.allWallets[i]);
-                }
-            }
-            this.shuffle(this.$store.state.walletMatches);
-            if (this.$store.state.walletMatches.length > 8) {
-                this.$store.state.walletMatches.length = 8;
-            }
-        },
-        shuffle(array) {
-            array.sort(() => Math.random() - 0.5);
+            this.$store.commit("clearMatchesArray");
+            this.$store.commit("updateWalletMatches");
+            this.$store.commit("shuffleWalletMatches");
+            this.$store.commit("reduceWalletMatchesLength");
         },
     },
     created() {
