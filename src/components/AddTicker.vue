@@ -1,5 +1,5 @@
 <template>
-    <h1>Добавить тикет</h1>
+    <h1>Добавить валюту</h1>
     <div class="d-flex w-75">
         <button @click="add" type="button" class="btn btn-success me-2 h-auto">
             <svg
@@ -60,7 +60,8 @@ export default {
             if (this.$store.state.ticker.length === 0) {
                 return;
             }
-            if (this.alreadyExists(this.$store.state.ticker, this.$store.state.tickerDependence)) {
+            console.log(this.alreadyExists(this.$store.state.ticker), this.$store.state.ticker);
+            if (this.alreadyExists(this.$store.state.ticker)) {
                 return;
             }
             const currentTicker = {
@@ -73,6 +74,9 @@ export default {
             localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(this.$store.state.tickers));
         },
         addMatchedTicker(match) {
+            if (this.alreadyExists(match)) {
+                return;
+            }
             const matchedTicker = {
                 name: match,
                 price: "-",
@@ -81,6 +85,19 @@ export default {
             this.$store.commit("addMatchedTicker", matchedTicker);
             this.$store.dispatch("subscribeOnUpdates", matchedTicker);
             localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(this.$store.state.tickers));
+        },
+        alreadyExists(tickerName) {
+            for (let i = 0; i < this.$store.state.tickers.length; i++) {
+                const ticker = this.$store.state.tickers[i];
+                if (ticker.name == tickerName && ticker.dependence == this.$store.state.tickerDependence) {
+                    return true;
+                }
+            }
+            // this.$store.state.tickers.forEach((t) => {
+            //     if (String(t.name) == String(tickerName) && String(t.dependence) == String(this.$store.state.tickerDependence)) {
+            //         return true;
+            //     }
+            // });
         },
         async getAllWallets() {
             const func = await fetch(
@@ -92,14 +109,6 @@ export default {
                     this.$store.commit("updateAllWallets", data.Data[coin].Symbol);
                 }
             }
-        },
-        alreadyExists(ticker, dependence) {
-            this.$store.state.tickers.forEach((t) => {
-                if (t.name == ticker && t.dependence == dependence) {
-                    return true;
-                }
-            });
-            return false;
         },
         findMatches() {
             if (this.$store.state.ticker.length == 0) {

@@ -63,6 +63,7 @@ export default createStore({
                 state.graphData = [];
                 state.selectedTicker = tickerToSelect;
             }
+            console.log(state.selectedTicker);
         },
         handleDeleteTicker(state, tickerToDelete) {
             state.tickers.splice(state.tickers.indexOf(tickerToDelete), 1);
@@ -70,33 +71,6 @@ export default createStore({
                 state.selectedTicker = null;
                 state.graphData = [];
             }
-        },
-        subscribeOnUpdates(state, ticker) {
-            let intervalId = setInterval(async () => {
-                const func = await fetch(
-                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
-                );
-                const data = await func.json();
-                if (data.Response == "Error") {
-                    clearInterval(intervalId);
-                    this.$store.commit("handleFetchError");
-                    let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
-                    storagedTickers.splice(
-                        storagedTickers.findIndex((t) => {
-                            ticker.name == t.name && ticker.dependence == t.name;
-                        }),
-                        1
-                    );
-                    localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
-                }
-                state.tickers.find((t) => t.name === ticker.name && t.dependence == ticker.dependence).price =
-                    data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
-                if (ticker.name == state.selectedTicker?.name && ticker.dependence == state.selectedTicker?.dependence) {
-                    state.graphData.push(data[ticker.dependence]);
-                }
-                state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
-            }, 2000);
-            return intervalId;
         },
         updateAllWallets(state, wallet) {
             state.allWallets.push(wallet);
@@ -125,6 +99,43 @@ export default createStore({
             if (state.walletMatches.length > 8) {
                 state.walletMatches.length = 8;
             }
+        },
+        closeGraph(state) {
+            state.graph = [];
+            state.selectedTicker = null;
+        },
+        normalizeGraph(state) {
+            state.graph = state.graphData;
+            return state.graph.map((value) => {
+                return ((value - this.minValue) * 95) / (this.maxValue - this.minValue) + 5;
+            });
+        },
+        subscribeOnUpdates(state, ticker) {
+            let intervalId = setInterval(async () => {
+                const func = await fetch(
+                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
+                );
+                const data = await func.json();
+                if (data.Response == "Error") {
+                    clearInterval(intervalId);
+                    this.$store.commit("handleFetchError");
+                    let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
+                    storagedTickers.splice(
+                        storagedTickers.findIndex((t) => {
+                            ticker.name == t.name && ticker.dependence == t.name;
+                        }),
+                        1
+                    );
+                    localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
+                }
+                state.tickers.find((t) => t.name === ticker.name && t.dependence == ticker.dependence).price =
+                    data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
+                if (ticker.name == state.selectedTicker?.name && ticker.dependence == state.selectedTicker?.dependence) {
+                    state.graphData.push(data[ticker.dependence]);
+                }
+                state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
+            }, 2000);
+            return intervalId;
         },
     },
     actions: {

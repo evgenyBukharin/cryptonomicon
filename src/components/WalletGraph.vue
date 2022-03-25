@@ -5,47 +5,46 @@
                 {{ maxValue }}
             </div>
             <span
-                v-if="$store.state.graph.length > 2"
+                v-if="$store.state.graph.length > 3"
                 class="position-absolute top-0 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
 
-            <div v-if="$store.state.graph.length > 2" class="position-absolute top-45 start-0 graph-scale_text">
+            <div v-if="$store.state.graph.length > 3" class="position-absolute top-45 start-0 graph-scale_text">
                 {{ middleValue }}
             </div>
             <span
-                v-if="$store.state.graph.length > 2"
+                v-if="$store.state.graph.length > 3"
                 class="position-absolute top-45 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
 
-            <div v-if="$store.state.graph.length > 2" class="position-absolute top-95 start-0 graph-scale_text">
+            <div v-if="$store.state.graph.length > 3" class="position-absolute top-95 start-0 graph-scale_text">
                 {{ minValue }}
             </div>
             <span
-                v-if="$store.state.graph.length > 2"
+                v-if="$store.state.graph.length > 3"
                 class="position-absolute top-95 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
 
             <span
-                v-for="(graphSel, i) in normalizeGraph()"
+                v-for="(graphSel, i) in store.commit('normalizeGraph')"
                 :key="i"
                 class="bg-primary"
                 :style="{ height: graphSel + '%', width: this.graphSelWidth }"
                 :value="$store.state.graphData[i]"
-                @mouseover="createHover($store.state.graphData[i], $store.state.selectedTicker.dependence)"
+                @mouseover="createHover(this.$store.state.graphData[i])"
                 @mousemove="(event) => holdHover(event)"
                 @mouseleave="(event) => deleteHover(event)"
             ></span>
-            <span v-show="$store.state.graph.length < 10" style="height: 100%; width: 1px"></span>
             <img
                 v-if="btnVisible"
                 src="../assets/cancel.png"
                 class="position-absolute top-0 end-0 cursor-pointer"
                 alt="close graph btn"
                 style="width: 18px; margin-right: -22px"
-                @click="closeGraph"
+                @click="$store.commit('closeGraph')"
             />
         </div>
         <h5 v-if="title" class="mt-2">
@@ -57,17 +56,7 @@
 export default {
     props: ["btnVisible", "graphSelWidth", "title"],
     methods: {
-        closeGraph() {
-            this.$store.state.graph = [];
-            this.$store.state.selectedTicker = null;
-        },
-        normalizeGraph() {
-            this.$store.state.graph = this.$store.state.graphData;
-            return this.$store.state.graph.map((value) => {
-                return ((value - this.minValue) * 95) / (this.maxValue - this.minValue) + 5;
-            });
-        },
-        createHover(value, dep) {
+        createHover(value) {
             const hover = document.createElement("div");
             hover.classList.add(
                 "position-absolute",
@@ -80,7 +69,7 @@ export default {
                 "border-4",
                 "border-white"
             );
-            hover.innerHTML = value + " " + dep;
+            hover.innerHTML = value + " " + this.$store.state.selectedTicker.dependence;
             hover.id = "hover";
             document.body.appendChild(hover);
         },
