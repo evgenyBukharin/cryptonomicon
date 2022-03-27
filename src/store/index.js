@@ -2,28 +2,29 @@ import { createStore } from "vuex";
 
 export default createStore({
     state: {
-        // home page
+        ticker: "",
+        filter: "",
+        newDependence: "",
         tickers: [],
+        selectedTicker: null,
         tickersPerPage: 8,
         page: 1,
         hasNextPage: false,
-        selectedTicker: null,
+        graph: [],
         graphData: [],
-        filter: "",
-
-        // add ticker component
-        ticker: "",
-        tickerOverride: "",
         walletMatches: [],
         allWallets: [],
-        walletList: ["RUB", "EUR", "ETH"],
+        walletList: ["RUB", "EUR"],
         tickerDependence: "USD",
 
-        // walletGraph component
-        graph: [],
-
-        // addDependetce component
-        newDependence: "",
+        //converter
+        firstWallet: "USD",
+        secondWallet: "BTC",
+        firstWalletCourse: null,
+        secondWalletCourse: null,
+        firstMultiplyed: null,
+        secondMultiplyed: null,
+        swapPlaces: false,
     },
     mutations: {
         addNewDependence(state) {
@@ -78,6 +79,14 @@ export default createStore({
         hasNextPageUpdate(state, length, end) {
             state.hasNextPage = length > end;
         },
+        formatWalletPrice(state, data, tickerName, tickerDependence) {
+            console.log(data, tickerName, tickerDependence);
+            // state.tickers.find((t) => t.name == ticker.name && t.dependence == ticker.dependence).price =
+            //     data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
+        },
+        addTickerIntervalId(state, intervalId, ticker) {
+            state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
+        },
         noMatchesHandle(state) {
             state.walletMatches.length = 0;
         },
@@ -104,43 +113,29 @@ export default createStore({
             state.graph = [];
             state.selectedTicker = null;
         },
-        normalizeGraph(state) {
-            state.graph = state.graphData;
-            return state.graph.map((value) => {
-                return ((value - this.minValue) * 95) / (this.maxValue - this.minValue) + 5;
-            });
+        addNewGraphData(state, data, ticker) {
+            if (ticker.name == state.selectedTicker?.name && ticker.dependence == state.selectedTicker?.dependence) {
+                state.graphData.push(data[ticker.dependence]);
+            }
         },
-        subscribeOnUpdates(state, ticker) {
-            let intervalId = setInterval(async () => {
-                const func = await fetch(
-                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
-                );
-                const data = await func.json();
-                if (data.Response == "Error") {
-                    clearInterval(intervalId);
-                    this.$store.commit("handleFetchError");
-                    let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
-                    storagedTickers.splice(
-                        storagedTickers.findIndex((t) => {
-                            ticker.name == t.name && ticker.dependence == t.name;
-                        }),
-                        1
-                    );
-                    localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
-                }
-                state.tickers.find((t) => t.name === ticker.name && t.dependence == ticker.dependence).price =
-                    data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
-                if (ticker.name == state.selectedTicker?.name && ticker.dependence == state.selectedTicker?.dependence) {
-                    state.graphData.push(data[ticker.dependence]);
-                }
-                state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
-            }, 2000);
-            return intervalId;
+        setGraphData(state) {
+            state.graph = state.graphData;
+        },
+
+        setConverterData(state, data) {
+            state.secondWalletCourse = data[state.firstWallet][state.secondWallet];
+            state.firstWalletCourse = data[state.secondWallet][state.firstWallet];
+            state.secondMultiplyed = data[state.secondWallet][state.secondWallet];
+            state.firstMultiplyed = data[state.secondWallet][state.firstWallet];
         },
     },
     actions: {
-        subscribeOnUpdates({ commit }, ticker) {
-            commit("subscribeOnUpdates", ticker);
+        async setConverterData({ commit }) {
+            const func = await fetch(
+                `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${this.secondWallet},${this.firstWallet}&tsyms=${this.firstWallet},${this.secondWallet}`
+            );
+            const data = await func.json();
+            commit("setConverterData", data);
         },
     },
     getters: {},

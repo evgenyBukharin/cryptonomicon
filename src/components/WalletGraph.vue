@@ -5,31 +5,31 @@
                 {{ maxValue }}
             </div>
             <span
-                v-if="this.$store.state.graph.length > 3"
+                v-if="this.$store.state.graph.length > 2"
                 class="position-absolute top-0 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
 
-            <div v-if="$store.state.graph.length > 3" class="position-absolute top-45 start-0 graph-scale_text">
+            <div v-if="$store.state.graph.length > 2" class="position-absolute top-45 start-0 graph-scale_text">
                 {{ middleValue }}
             </div>
             <span
-                v-if="$store.state.graph.length > 3"
+                v-if="$store.state.graph.length > 2"
                 class="position-absolute top-45 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
 
-            <div v-if="$store.state.graph.length > 3" class="position-absolute top-95 start-0 graph-scale_text">
+            <div v-if="$store.state.graph.length > 2" class="position-absolute top-95 start-0 graph-scale_text">
                 {{ minValue }}
             </div>
             <span
-                v-if="$store.state.graph.length > 3"
+                v-if="$store.state.graph.length > 2"
                 class="position-absolute top-95 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
 
             <span
-                v-for="(graphSel, i) in $store.commit('normalizeGraph')"
+                v-for="(graphSel, i) in normalizeGraph()"
                 :key="i"
                 class="bg-primary"
                 :style="{ height: graphSel + '%', width: this.graphSelWidth }"
@@ -82,6 +82,12 @@ export default {
         deleteHover(event) {
             document.body.removeChild(document.querySelector("#hover"));
             event.target.classList.remove("border", "border-1", "border-white", "border-top-0", "border-bottom-0");
+        },
+        normalizeGraph() {
+            this.$store.commit("setGraphData");
+            return this.$store.state.graph.map((value) => {
+                return ((value - this.minValue) * 95) / (this.maxValue - this.minValue) + 5;
+            });
         },
     },
     computed: {
