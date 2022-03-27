@@ -60,7 +60,6 @@ export default {
             if (this.$store.state.ticker.length === 0) {
                 return;
             }
-            console.log(this.alreadyExists(this.$store.state.ticker), this.$store.state.ticker);
             if (this.alreadyExists(this.$store.state.ticker)) {
                 return;
             }
@@ -93,11 +92,7 @@ export default {
                     return true;
                 }
             }
-            // this.$store.state.tickers.forEach((t) => {
-            //     if (String(t.name) == String(tickerName) && String(t.dependence) == String(this.$store.state.tickerDependence)) {
-            //         return true;
-            //     }
-            // });
+            return false;
         },
         async getAllWallets() {
             const func = await fetch(

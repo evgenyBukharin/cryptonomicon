@@ -48,7 +48,7 @@
             </div>
         </div>
     </div>
-    <Wallet-graph btnVisible="true" graphSelWidth="'20px'" title="false" />
+    <Wallet-graph :btnVisible="true" :graphSelWidth="'20px'" :title="false" />
 </template>
 <script>
 import AddTicker from "../components/AddTicker.vue";

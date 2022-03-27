@@ -1,11 +1,11 @@
 <template>
-    <div v-if="$store.state.selectedTicker !== null" class="mt-3 mb-3 w-100">
+    <div v-if="this.$store.state.selectedTicker !== null" class="mt-3 mb-3 w-100">
         <div class="graph position-relative d-flex align-items-end border border-2 border-primary border-top-0 border-end-0">
             <div v-if="$store.state.graph.length > 2" class="position-absolute top-0 start-0 graph-scale_text">
                 {{ maxValue }}
             </div>
             <span
-                v-if="$store.state.graph.length > 3"
+                v-if="this.$store.state.graph.length > 3"
                 class="position-absolute top-0 start-0 graph-scale"
                 style="height: 3px; width: 20px; background-color: black"
             ></span>
@@ -29,7 +29,7 @@
             ></span>
 
             <span
-                v-for="(graphSel, i) in store.commit('normalizeGraph')"
+                v-for="(graphSel, i) in $store.commit('normalizeGraph')"
                 :key="i"
                 class="bg-primary"
                 :style="{ height: graphSel + '%', width: this.graphSelWidth }"
