@@ -79,14 +79,6 @@ export default createStore({
         hasNextPageUpdate(state, length, end) {
             state.hasNextPage = length > end;
         },
-        formatWalletPrice(state, data, tickerName, tickerDependence) {
-            console.log(data, tickerName, tickerDependence);
-            // state.tickers.find((t) => t.name == ticker.name && t.dependence == ticker.dependence).price =
-            //     data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
-        },
-        addTickerIntervalId(state, intervalId, ticker) {
-            state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
-        },
         noMatchesHandle(state) {
             state.walletMatches.length = 0;
         },
@@ -113,27 +105,51 @@ export default createStore({
             state.graph = [];
             state.selectedTicker = null;
         },
-        addNewGraphData(state, data, ticker) {
-            if (ticker.name == state.selectedTicker?.name && ticker.dependence == state.selectedTicker?.dependence) {
-                state.graphData.push(data[ticker.dependence]);
-            }
-        },
         setGraphData(state) {
             state.graph = state.graphData;
         },
-
         setConverterData(state, data) {
             state.secondWalletCourse = data[state.firstWallet][state.secondWallet];
             state.firstWalletCourse = data[state.secondWallet][state.firstWallet];
             state.secondMultiplyed = data[state.secondWallet][state.secondWallet];
             state.firstMultiplyed = data[state.secondWallet][state.firstWallet];
         },
+        subscribeOnUpdates(state, ticker) {
+            let intervalId = setInterval(async () => {
+                const func = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`);
+                const data = await func.json();
+                if (data.Response == "Error") {
+                    clearInterval(intervalId);
+                    state.tickers.splice(state.tickers.indexOf(state.ticker), 1);
+                    let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
+                    storagedTickers.splice(
+                        storagedTickers.findIndex((t) => {
+                            ticker.name == t.name && ticker.dependence == t.name;
+                        }),
+                        1
+                    );
+                    localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
+                }
+                state.tickers.find((t) => t.name == ticker.name && t.dependence == ticker.dependence).price = data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
+                if (ticker.name == state.selectedTicker?.name && ticker.dependence == state.selectedTicker?.dependence) {
+                    state.graphData.push(data[ticker.dependence]);
+                }
+                state.tickers.find((t) => ticker.name == t.name && ticker.dependence == t.dependence).intId = intervalId;
+            }, 2000);
+        },
+        changeFirstMylptiplyer(state) {
+            state.secondMultiplyed = state.secondWalletCourse * state.firstMultiplyed;
+        },
+        changeSecondMylptiplyer(state) {
+            state.firstMultiplyed = state.firstWalletCourse * state.secondMultiplyed;
+        },
+        swapBlocks(state) {
+            state.swapPlaces = !state.swapPlaces;
+        },
     },
     actions: {
         async setConverterData({ commit }) {
-            const func = await fetch(
-                `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${this.secondWallet},${this.firstWallet}&tsyms=${this.firstWallet},${this.secondWallet}`
-            );
+            const func = await fetch(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${this.secondWallet},${this.firstWallet}&tsyms=${this.firstWallet},${this.secondWallet}`);
             const data = await func.json();
             commit("setConverterData", data);
         },

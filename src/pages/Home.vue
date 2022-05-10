@@ -2,13 +2,7 @@
     <Add-ticker />
     <div class="d-flex align-items-center mt-3">
         <h5 class="mb-0 me-2">Фильтр:</h5>
-        <input
-            v-model.trim="$store.state.filter"
-            @input="$store.commit('filterInputHandle')"
-            type="text"
-            class="form-control form-control-md w-15"
-            placeholder="Название валюты"
-        />
+        <input v-model.trim="$store.state.filter" @input="$store.commit('filterInputHandle')" type="text" class="form-control form-control-md w-15" placeholder="Название валюты" />
     </div>
 
     <hr class="mb-3 mt-3" />
@@ -75,32 +69,6 @@ export default {
             this.$store.commit("hasNextPageUpdate", filteredTickers.length, this.end);
             return filteredTickers.slice(this.start, this.end);
         },
-        subscribeOnUpdates(ticker) {
-            let intervalId = setInterval(async () => {
-                const func = await fetch(
-                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
-                );
-                const data = await func.json();
-                if (data.Response == "Error") {
-                    clearInterval(intervalId);
-                    this.$store.commit("handleFetchError");
-                    let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
-                    storagedTickers.splice(
-                        storagedTickers.findIndex((t) => {
-                            ticker.name == t.name && ticker.dependence == t.name;
-                        }),
-                        1
-                    );
-                    localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
-                }
-                const tickerName = ticker.name;
-                const tickerDependence = ticker.dependence;
-                this.$store.commit("formatWalletPrice", data, tickerName, tickerDependence);
-                // this.$store.commit("addNewGraphData", data, ticker);
-                // this.$store.commit("addTickerIntervalId", intervalId, ticker);
-            }, 2000);
-            return intervalId;
-        },
     },
     computed: {
         start() {
@@ -118,7 +86,7 @@ export default {
             });
         }
         this.$store.state.tickers.forEach((t) => {
-            this.subscribeOnUpdates(t);
+            this.$store.commit("subscribeOnUpdates", t);
         });
     },
     watch: {
