@@ -26,7 +26,11 @@
                 <li v-if="showLogoutBtn" class="nav-item" @click="handleLogout"><div class="nav-link">Выйти</div></li>
             </ul>
         </header>
-        <router-view></router-view>
+        <router-view v-slot="{ Component, route }">
+            <transition name="fade" mode="out-in" :enter-active-class="route.meta.enterClass" :leave-active-class="route.meta.leaveClass">
+                <component :is="Component" />
+            </transition>
+        </router-view>
     </div>
 </template>
 

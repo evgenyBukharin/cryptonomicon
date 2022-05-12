@@ -7,7 +7,7 @@ export default createStore({
         newDependence: "",
         tickers: [],
         selectedTicker: null,
-        tickersPerPage: 8,
+        tickersPerPage: 6,
         page: 1,
         hasNextPage: false,
         graph: [],
@@ -76,8 +76,8 @@ export default createStore({
         updateAllWallets(state, wallet) {
             state.allWallets.push(wallet);
         },
-        hasNextPageUpdate(state, length, end) {
-            state.hasNextPage = length > end;
+        hasNextPageUpdate(state, value) {
+            state.hasNextPage = value;
         },
         noMatchesHandle(state) {
             state.walletMatches.length = 0;
