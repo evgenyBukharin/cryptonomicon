@@ -24,7 +24,6 @@ export default createStore({
         secondWalletCourse: null,
         firstMultiplyed: null,
         secondMultiplyed: null,
-        swapPlaces: false,
     },
     mutations: {
         addNewDependence(state) {
@@ -116,7 +115,9 @@ export default createStore({
         },
         subscribeOnUpdates(state, ticker) {
             let intervalId = setInterval(async () => {
-                const func = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`);
+                const func = await fetch(
+                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
+                );
                 const data = await func.json();
                 if (data.Response == "Error") {
                     clearInterval(intervalId);
@@ -130,7 +131,8 @@ export default createStore({
                     );
                     localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
                 }
-                state.tickers.find((t) => t.name == ticker.name && t.dependence == ticker.dependence).price = data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
+                state.tickers.find((t) => t.name == ticker.name && t.dependence == ticker.dependence).price =
+                    data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
                 if (ticker.name == state.selectedTicker?.name && ticker.dependence == state.selectedTicker?.dependence) {
                     state.graphData.push(data[ticker.dependence]);
                 }
@@ -143,13 +145,13 @@ export default createStore({
         changeSecondMylptiplyer(state) {
             state.firstMultiplyed = state.firstWalletCourse * state.secondMultiplyed;
         },
-        swapBlocks(state) {
-            state.swapPlaces = !state.swapPlaces;
-        },
+        swapData(state) {},
     },
     actions: {
-        async setConverterData({ commit }) {
-            const func = await fetch(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${this.secondWallet},${this.firstWallet}&tsyms=${this.firstWallet},${this.secondWallet}`);
+        async setConverterData({ commit, state }) {
+            const func = await fetch(
+                `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${state.secondWallet},${state.firstWallet}&tsyms=${state.firstWallet},${state.secondWallet}`
+            );
             const data = await func.json();
             commit("setConverterData", data);
         },

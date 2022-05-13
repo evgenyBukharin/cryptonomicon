@@ -2,13 +2,7 @@
     <div class="page container">
         <h1 class="mb-3">Конвертер валют</h1>
         <div class="col-8 d-flex justify-content-between">
-            <div
-                class="d-flex flex-wrap"
-                :class="{
-                    'order-1': $store.state.swapPlaces == false,
-                    'order-3': $store.state.swapPlaces == true,
-                }"
-            >
+            <div class="d-flex flex-wrap">
                 <div class="d-flex align-items-center">
                     <h4 class="me-2">У меня есть</h4>
                     <select class="form-select converter__select" v-model="$store.state.firstWallet" @change="changeWalletsChoise">
@@ -32,14 +26,8 @@
                     <h5 class="m-0">1 {{ $store.state.firstWallet + " = " + $store.state.secondWalletCourse + " " + $store.state.secondWallet }}</h5>
                 </div>
             </div>
-            <div class="converter__transfer col-2 mx-4 mt-4 order-2 cursor-pointer" @click="$store.commit('swapBlocks')" style="width: 80px"></div>
-            <div
-                class="d-flex flex-wrap"
-                :class="{
-                    'order-1': $store.state.swapPlaces == true,
-                    'order-3': $store.state.swapPlaces == false,
-                }"
-            >
+            <div class="converter__transfer col-2 mx-4 mt-4 order-2 cursor-pointer" @click="$store.commit('swapData')" style="width: 80px"></div>
+            <div class="d-flex flex-wrap">
                 <div class="d-flex align-items-center">
                     <h4 class="me-2">Хочу купить</h4>
                     <select class="form-select converter__select" v-model="$store.state.secondWallet" @change="changeWalletsChoise">
@@ -82,14 +70,7 @@ export default {
         },
     },
     async created() {
-        const func = await fetch(
-            `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${this.$store.state.secondWallet},${this.$store.state.firstWallet}&tsyms=${this.$store.state.firstWallet},${this.$store.state.secondWallet}`
-        );
-        const data = await func.json();
-        this.$store.state.secondWalletCourse = data[this.$store.state.firstWallet][this.$store.state.secondWallet];
-        this.$store.state.firstWalletCourse = data[this.$store.state.secondWallet][this.$store.state.firstWallet];
-        this.$store.state.secondMultiplyed = data[this.$store.state.secondWallet][this.$store.state.secondWallet];
-        this.$store.state.firstMultiplyed = data[this.$store.state.secondWallet][this.$store.state.firstWallet];
+        this.$store.dispatch("setConverterData");
     },
 };
 </script>
