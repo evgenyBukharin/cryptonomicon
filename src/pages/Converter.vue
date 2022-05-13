@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="page container">
         <h1 class="mb-3">Конвертер валют</h1>
         <div class="col-8 d-flex justify-content-between">
             <div
@@ -19,8 +19,16 @@
                     </select>
                     <Add-dependence />
                 </div>
-                <div class="w-100 mt-2 border border-1 border-primary p-3 converter__count_block rounded-3 d-flex flex-column justify-content-between">
-                    <input @input="(event) => handleWalletCount(event)" @change="$store.commit('changeFirstMylptiplyer')" type="text" class="w-100 h-80 border-0 outline-0 fs-1 text-center converter__values" v-model="$store.state.firstMultiplyed" />
+                <div
+                    class="w-100 mt-2 border border-1 border-primary p-3 converter__count_block rounded-3 d-flex flex-column justify-content-between"
+                >
+                    <input
+                        @input="(event) => handleWalletCount(event)"
+                        @change="$store.commit('changeFirstMylptiplyer')"
+                        type="text"
+                        class="w-100 h-80 border-0 outline-0 fs-1 text-center converter__values"
+                        v-model="$store.state.firstMultiplyed"
+                    />
                     <h5 class="m-0">1 {{ $store.state.firstWallet + " = " + $store.state.secondWalletCourse + " " + $store.state.secondWallet }}</h5>
                 </div>
             </div>
@@ -42,8 +50,16 @@
                     </select>
                     <Add-dependence />
                 </div>
-                <div class="w-100 mt-2 border border-1 border-primary p-3 converter__count_block rounded-3 d-flex flex-column justify-content-between">
-                    <input @input="(event) => handleWalletCount(event)" @change="$store.commit('changeSecondMylptiplyer')" type="text" class="w-100 h-80 border-0 outline-0 fs-1 text-center converter__values" v-model="$store.state.secondMultiplyed" />
+                <div
+                    class="w-100 mt-2 border border-1 border-primary p-3 converter__count_block rounded-3 d-flex flex-column justify-content-between"
+                >
+                    <input
+                        @input="(event) => handleWalletCount(event)"
+                        @change="$store.commit('changeSecondMylptiplyer')"
+                        type="text"
+                        class="w-100 h-80 border-0 outline-0 fs-1 text-center converter__values"
+                        v-model="$store.state.secondMultiplyed"
+                    />
                     <h5 class="m-0">1 {{ $store.state.secondWallet + " = " + $store.state.firstWalletCourse + " " + $store.state.firstWallet }}</h5>
                 </div>
             </div>
@@ -66,7 +82,9 @@ export default {
         },
     },
     async created() {
-        const func = await fetch(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${this.$store.state.secondWallet},${this.$store.state.firstWallet}&tsyms=${this.$store.state.firstWallet},${this.$store.state.secondWallet}`);
+        const func = await fetch(
+            `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${this.$store.state.secondWallet},${this.$store.state.firstWallet}&tsyms=${this.$store.state.firstWallet},${this.$store.state.secondWallet}`
+        );
         const data = await func.json();
         this.$store.state.secondWalletCourse = data[this.$store.state.firstWallet][this.$store.state.secondWallet];
         this.$store.state.firstWalletCourse = data[this.$store.state.secondWallet][this.$store.state.firstWallet];

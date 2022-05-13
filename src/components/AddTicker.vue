@@ -3,12 +3,21 @@
     <div class="d-flex w-75">
         <button @click="add" type="button" class="btn btn-success me-2 h-auto">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square me-2" viewBox="0 0 16 16">
-                <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"></path>
+                <path
+                    d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"
+                ></path>
                 <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
             </svg>
             Добавить
         </button>
-        <input v-model="$store.state.ticker" @input="findMatches()" @keydown.enter="add" type="text" class="form-control form-control-md w-40" placeholder="Введите название валюты..." />
+        <input
+            v-model="$store.state.ticker"
+            @input="findMatches()"
+            @keydown.enter="add"
+            type="text"
+            class="form-control form-control-md w-40"
+            placeholder="Введите название валюты..."
+        />
         <select class="form-select form-select-lg w-15 ms-2" v-model="$store.state.tickerDependence">
             <option value="USD" selected>USD</option>
             <option v-for="(wallet, i) in $store.state.walletList" :key="i" :value="wallet">
@@ -70,7 +79,9 @@ export default {
             return false;
         },
         async getAllWallets() {
-            const func = await fetch(`https://min-api.cryptocompare.com/data/all/coinlist?summary=true&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`);
+            const func = await fetch(
+                `https://min-api.cryptocompare.com/data/all/coinlist?summary=true&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
+            );
             const data = await func.json();
             for (const coin in data.Data) {
                 if (Object.hasOwnProperty.call(data.Data, coin)) {
@@ -89,30 +100,6 @@ export default {
             this.$store.commit("shuffleWalletMatches");
             this.$store.commit("reduceWalletMatchesLength");
         },
-        // subscribeOnUpdates(ticker) {
-        //     let intervalId = setInterval(async () => {
-        //         const func = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`);
-        //         const data = await func.json();
-        //         if (data.Response == "Error") {
-        //             clearInterval(intervalId);
-        //             this.$store.commit("handleFetchError");
-        //             let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
-        //             storagedTickers.splice(
-        //                 storagedTickers.findIndex((t) => {
-        //                     ticker.name == t.name && ticker.dependence == t.name;
-        //                 }),
-        //                 1
-        //             );
-        //             localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
-        //         }
-        //         const tickerName = ticker.name;
-        //         const tickerDependence = ticker.dependence;
-        //         this.$store.commit("formatWalletPrice", data, tickerName, tickerDependence);
-        //         this.$store.commit("addNewGraphData", data, ticker);
-        //         this.$store.commit("tickerIntervalId", intervalId, ticker);
-        //     }, 2000);
-        //     return intervalId;
-        // },
     },
     created() {
         this.getAllWallets();

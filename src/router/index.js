@@ -14,8 +14,8 @@ const routes = [
         name: "Home",
         component: Home,
         meta: {
-            enterClass: "animate__animated animate__fadeInRight",
-            leaveClass: "animate__animated animate__fadeOutLeft",
+            enterClass: "animate__animated animate__fast animate__fadeInRight",
+            leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
         },
     },
     {
@@ -23,8 +23,8 @@ const routes = [
         name: "TopList",
         component: TopList,
         meta: {
-            enterClass: "animate__animated animate__fadeInRight",
-            leaveClass: "animate__animated animate__fadeOutLeft",
+            enterClass: "animate__animated animate__fast animate__fadeInRight",
+            leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
         },
     },
     {
@@ -32,8 +32,8 @@ const routes = [
         name: "wallet",
         component: WalletDetails,
         meta: {
-            enterClass: "animate__animated animate__fadeInRight",
-            leaveClass: "animate__animated animate__fadeOutLeft",
+            enterClass: "animate__animated animate__fast animate__fadeInRight",
+            leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
         },
     },
     {
@@ -41,8 +41,8 @@ const routes = [
         name: "Converter",
         component: Converter,
         meta: {
-            enterClass: "animate__animated animate__fadeInRight",
-            leaveClass: "animate__animated animate__fadeOutLeft",
+            enterClass: "animate__animated animate__fast animate__fadeInRight",
+            leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
         },
     },
     {
@@ -50,8 +50,8 @@ const routes = [
         name: "News",
         component: News,
         meta: {
-            enterClass: "animate__animated animate__fadeInRight",
-            leaveClass: "animate__animated animate__fadeOutLeft",
+            enterClass: "animate__animated animate__fast animate__fadeInRight",
+            leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
         },
     },
     {
@@ -59,8 +59,8 @@ const routes = [
         name: "Login",
         component: Login,
         meta: {
-            enterClass: "animate__animated animate__fadeInRight",
-            leaveClass: "animate__animated animate__fadeOutLeft",
+            enterClass: "animate__animated animate__fast animate__fadeInRight",
+            leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
         },
     },
     {
@@ -68,8 +68,8 @@ const routes = [
         name: "Register",
         component: Register,
         meta: {
-            enterClass: "animate__animated animate__fadeInRight",
-            leaveClass: "animate__animated animate__fadeOutLeft",
+            enterClass: "animate__animated animate__fast animate__fadeInRight",
+            leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
         },
     },
     {
@@ -77,8 +77,8 @@ const routes = [
         name: "Admin",
         component: Admin,
         meta: {
-            enterClass: "animate__animated animate__fadeInRight",
-            leaveClass: "animate__animated animate__fadeOutLeft",
+            enterClass: "animate__animated animate__fast animate__fadeInRight",
+            leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
         },
     },
     {

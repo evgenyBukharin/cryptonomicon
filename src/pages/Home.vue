@@ -1,9 +1,15 @@
 <template>
-    <div>
+    <div class="container page">
         <Add-ticker />
         <div class="d-flex align-items-center mt-3">
             <h5 class="mb-0 me-2">Фильтр:</h5>
-            <input v-model.trim="$store.state.filter" @input="$store.commit('filterInputHandle')" type="text" class="form-control form-control-md w-15" placeholder="Название валюты" />
+            <input
+                v-model.trim="$store.state.filter"
+                @input="$store.commit('filterInputHandle')"
+                type="text"
+                class="form-control form-control-md w-15"
+                placeholder="Название валюты"
+            />
         </div>
 
         <hr class="mb-3 mt-3" />
@@ -13,32 +19,30 @@
             <button class="btn btn-success" @click="$store.commit('plusPage')" :disabled="!$store.state.hasNextPage">Вперед</button>
         </div>
 
-        <div class="container">
-            <div class="row row-cols-3 g-3">
-                <div class="col" v-for="(t, i) in filteredTickers()" :key="i">
-                    <div
-                        class="card border-4"
-                        :class="{
-                            'border-primary': $store.state.selectedTicker == t,
-                        }"
-                        @click="$store.commit('setSelectedTicker', t)"
-                    >
-                        <div class="card-body d-flex flex-column">
-                            <h3 class="card-title text-center">
-                                <router-link :to="/wallet/ + t.name"> {{ t.name }} </router-link> - {{ t.dependence }}
-                            </h3>
-                            <h4 class="card-title text-center">{{ t.price }}</h4>
-                            <button
-                                @click.stop="deleteTicker(t)"
-                                class="btn"
-                                :class="{
-                                    'btn-primary': $store.state.selectedTicker == t,
-                                    'btn-secondary': $store.state.selectedTicker !== t,
-                                }"
-                            >
-                                Удалить
-                            </button>
-                        </div>
+        <div class="row row-cols-3 g-3">
+            <div class="col" v-for="(t, i) in filteredTickers()" :key="i">
+                <div
+                    class="card border-4"
+                    :class="{
+                        'border-primary': $store.state.selectedTicker == t,
+                    }"
+                    @click="$store.commit('setSelectedTicker', t)"
+                >
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="card-title text-center">
+                            <router-link :to="/wallet/ + t.name"> {{ t.name }} </router-link> - {{ t.dependence }}
+                        </h3>
+                        <h4 class="card-title text-center">{{ t.price }}</h4>
+                        <button
+                            @click.stop="deleteTicker(t)"
+                            class="btn"
+                            :class="{
+                                'btn-primary': $store.state.selectedTicker == t,
+                                'btn-secondary': $store.state.selectedTicker !== t,
+                            }"
+                        >
+                            Удалить
+                        </button>
                     </div>
                 </div>
             </div>

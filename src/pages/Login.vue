@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="page container">
         <form class="w-30" @submit.prevent="sendLoginData()">
             <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите</h1>
             <div class="form-floating">

@@ -1,10 +1,18 @@
 <template>
-    <div>
+    <div class="page container">
         <h1 class="mb-4">Страница администратора</h1>
         <div class="row row-cols-2 g-4">
             <div class="col" v-for="(user, i) in users" :key="i">
                 <div class="card">
-                    <svg class="card-img-top" width="100%" height="25" xmlns="http://www.w3.org/2000/svg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false">
+                    <svg
+                        class="card-img-top"
+                        width="100%"
+                        height="25"
+                        xmlns="http://www.w3.org/2000/svg"
+                        role="img"
+                        preserveAspectRatio="xMidYMid slice"
+                        focusable="false"
+                    >
                         <rect width="100%" height="100%" fill="#0d6efd"></rect>
                     </svg>
                     <div class="card-body d-flex justify-content-between">

@@ -27,7 +27,7 @@
             </ul>
         </header>
         <router-view v-slot="{ Component, route }">
-            <transition name="fade" mode="out-in" :enter-active-class="route.meta.enterClass" :leave-active-class="route.meta.leaveClass">
+            <transition name="fade" :enter-active-class="route.meta.enterClass" :leave-active-class="route.meta.leaveClass">
                 <component :is="Component" />
             </transition>
         </router-view>
@@ -59,4 +59,7 @@ export default {
 <style lang="scss">
 @import "/assets/scss/custom.scss";
 @import "bootstrap";
+.page {
+    position: absolute;
+}
 </style>
