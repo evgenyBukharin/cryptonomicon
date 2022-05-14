@@ -14,7 +14,7 @@ export default createStore({
         graphData: [],
         walletMatches: [],
         allWallets: [],
-        walletList: ["RUB", "EUR"],
+        walletList: ["USD", "RUB", "EUR", "BTC"],
         tickerDependence: "USD",
 
         //converter
@@ -145,7 +145,19 @@ export default createStore({
         changeSecondMylptiplyer(state) {
             state.firstMultiplyed = state.firstWalletCourse * state.secondMultiplyed;
         },
-        swapData(state) {},
+        swapData(state) {
+            let buffer = state.firstWallet;
+            state.firstWallet = state.secondWallet;
+            state.secondWallet = buffer;
+
+            buffer = state.firstWalletCourse;
+            state.firstWalletCourse = state.secondWalletCourse;
+            state.secondWalletCourse = buffer;
+
+            buffer = state.firstMultiplyed;
+            state.firstMultiplyed = state.secondMultiplyed;
+            state.secondMultiplyed = buffer;
+        },
     },
     actions: {
         async setConverterData({ commit, state }) {

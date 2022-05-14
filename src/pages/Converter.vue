@@ -6,7 +6,6 @@
                 <div class="d-flex align-items-center">
                     <h4 class="me-2">У меня есть</h4>
                     <select class="form-select converter__select" v-model="$store.state.firstWallet" @change="changeWalletsChoise">
-                        <option value="USD" selected>USD</option>
                         <option v-for="(wallet, i) in $store.state.walletList" :key="i" :value="wallet">
                             {{ wallet }}
                         </option>
@@ -27,11 +26,10 @@
                 </div>
             </div>
             <div class="converter__transfer col-2 mx-4 mt-4 order-2 cursor-pointer" @click="$store.commit('swapData')" style="width: 80px"></div>
-            <div class="d-flex flex-wrap">
+            <div class="d-flex flex-wrap order-3">
                 <div class="d-flex align-items-center">
                     <h4 class="me-2">Хочу купить</h4>
                     <select class="form-select converter__select" v-model="$store.state.secondWallet" @change="changeWalletsChoise">
-                        <option value="BTC" selected>BTC</option>
                         <option v-for="(wallet, i) in $store.state.walletList" :key="i" :value="wallet">
                             {{ wallet }}
                         </option>

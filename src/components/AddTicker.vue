@@ -19,7 +19,6 @@
             placeholder="Введите название валюты..."
         />
         <select class="form-select form-select-lg w-15 ms-2" v-model="$store.state.tickerDependence">
-            <option value="USD" selected>USD</option>
             <option v-for="(wallet, i) in $store.state.walletList" :key="i" :value="wallet">
                 {{ wallet }}
             </option></select
