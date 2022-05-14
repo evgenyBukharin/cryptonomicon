@@ -47,9 +47,7 @@
                 @click="$store.commit('closeGraph')"
             />
         </div>
-        <h5 v-if="title" class="mt-2">
-            На графике отображены данные за последние {{ title }} дней (максимально допустимое количество дней - 2000)
-        </h5>
+        <h5 v-if="title" class="mt-2">На графике отображены данные за последние {{ title }} дней (максимально допустимое количество дней - 2000)</h5>
     </div>
 </template>
 <script>
@@ -58,18 +56,8 @@ export default {
     methods: {
         createHover(value) {
             const hover = document.createElement("div");
-            hover.classList.add(
-                "position-absolute",
-                "bg-primary",
-                "text-white",
-                "rounded-2",
-                "py-2",
-                "px-3",
-                "border",
-                "border-4",
-                "border-white"
-            );
-            hover.innerHTML = value + " " + this.$store.state.selectedTicker.dependence;
+            hover.classList.add("position-absolute", "bg-primary", "text-white", "rounded-2", "py-2", "px-3", "border", "border-4", "border-white");
+            hover.innerHTML = value + " USD";
             hover.id = "hover";
             document.body.appendChild(hover);
         },

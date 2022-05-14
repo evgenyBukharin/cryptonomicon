@@ -95,6 +95,7 @@ export default {
         this.$store.state.tickers.forEach((t) => {
             this.$store.commit("subscribeOnUpdates", t);
         });
+        this.$store.commit("setSelectedTicker", null);
     },
     watch: {
         $route() {

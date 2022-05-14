@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import router from "../router/index";
 
 export default createStore({
     state: {
@@ -24,6 +25,10 @@ export default createStore({
         secondWalletCourse: null,
         firstMultiplyed: null,
         secondMultiplyed: null,
+
+        //wallet details page
+        walletData: [],
+        graphDays: null,
     },
     mutations: {
         addNewDependence(state) {
@@ -63,7 +68,6 @@ export default createStore({
                 state.graphData = [];
                 state.selectedTicker = tickerToSelect;
             }
-            console.log(state.selectedTicker);
         },
         handleDeleteTicker(state, tickerToDelete) {
             state.tickers.splice(state.tickers.indexOf(tickerToDelete), 1);
@@ -158,6 +162,18 @@ export default createStore({
             state.firstMultiplyed = state.secondMultiplyed;
             state.secondMultiplyed = buffer;
         },
+        getGraphData(state, data) {
+            state.graphData = [];
+            data.Data.Data.forEach((coinData) => {
+                state.graphData.push(coinData.high);
+            });
+        },
+        getWalletData(state, data) {
+            state.walletData = data.Data[router.currentRoute.value.params.walletName];
+        },
+        fakeSelectedTicker(state) {
+            state.selectedTicker = "fake";
+        },
     },
     actions: {
         async setConverterData({ commit, state }) {
@@ -166,6 +182,18 @@ export default createStore({
             );
             const data = await func.json();
             commit("setConverterData", data);
+        },
+        async getGraphData({ commit }, limit) {
+            const f = await fetch(
+                `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${router.currentRoute.value.params.walletName}&tsym=USD&limit=${limit}`
+            );
+            const data = await f.json();
+            commit("getGraphData", data);
+        },
+        async getWalletData({ commit }) {
+            const f = await fetch(`https://min-api.cryptocompare.com/data/all/coinlist?fsym=${router.currentRoute.value.params.walletName}`);
+            const data = await f.json();
+            commit("getWalletData", data);
         },
     },
     getters: {},

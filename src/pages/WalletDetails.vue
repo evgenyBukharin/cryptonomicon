@@ -1,41 +1,41 @@
 <template>
     <div class="page container">
         <div class="d-flex align-items-center mb-2">
-            <h1 class="mb-0">Данные о {{ walletName }}</h1>
+            <h1 class="mb-0">Данные о {{ this.$route.params.walletName }}</h1>
             <img
-                v-if="walletData.imageUrl !== undefined"
+                v-if="this.$store.state.walletData.ImageUrl !== undefined"
                 class="ms-2"
                 style="width: 40px; height: 40px"
-                v-bind:src="'https://www.cryptocompare.com' + walletData.ImageUrl"
+                v-bind:src="'https://www.cryptocompare.com' + this.$store.state.walletData.ImageUrl"
             />
         </div>
         <p class="card-text">
-            <span v-if="walletData.AssetLaunchDate" class="d-block">Дата создания валюты: {{ walletData.AssetLaunchDate }}</span>
-            <span v-if="walletData.Algorithm" class="d-block">Валюта хэшируется с помощью алгоритма {{ walletData.Algorithm }}</span>
-            <span v-if="walletData.TotalCoinsMined" class="d-block">Всего добыто {{ walletData.TotalCoinsMined }} единиц валюты</span>
-            <span v-if="walletData.Rating" class="d-block"
-                >Оценка адаптивности к различным алгоритмам: {{ walletData.Rating.Weiss.TechnologyAdoptionRating }}</span
+            <span v-if="this.$store.state.walletData.AssetLaunchDate" class="d-block"
+                >Дата создания валюты: {{ this.$store.state.walletData.AssetLaunchDate }}</span
+            >
+            <span v-if="this.$store.state.walletData.Algorithm" class="d-block"
+                >Валюта хэшируется с помощью алгоритма {{ this.$store.state.walletData.Algorithm }}</span
+            >
+            <span v-if="this.$store.state.walletData.TotalCoinsMined" class="d-block"
+                >Всего добыто {{ this.$store.state.walletData.TotalCoinsMined }} единиц валюты</span
+            >
+            <span v-if="this.$store.state.walletData.Rating" class="d-block"
+                >Оценка адаптивности к различным алгоритмам: {{ this.$store.state.walletData.Rating.Weiss.TechnologyAdoptionRating }}</span
             >
         </p>
         <div class="d-flex align-items-center">
             <h4 class="me-3">Показать изменение курса валюты за последние:</h4>
             <input
                 @input="(event) => validateGraphDays(event)"
-                v-model.number="graphDays"
+                v-model.number="this.$store.state.graphDays"
                 type="text"
                 class="form-control form-control-md w-20 me-2"
                 placeholder="Введите количество дней"
-                @keydown.enter="updateGraphData(this.graphDays)"
+                @keydown.enter="updateGraphData()"
             />
-            <div class="btn btn-success" @click="updateGraphData(this.graphDays)">Показать</div>
+            <div class="btn btn-success" @click="updateGraphData()">Показать</div>
         </div>
-        <Wallet-graph
-            :graphValues="this.graphData"
-            @clearSelectedTicker="this.selectedTicker = null"
-            :btnVisible="false"
-            :graphSelWidth="'40px'"
-            :title="this.currentLimit"
-        />
+        <Wallet-graph :btnVisible="false" :graphSelWidth="'40px'" :title="true" />
     </div>
 </template>
 <script>
@@ -43,44 +43,27 @@ import WalletGraph from "../components/WalletGraph.vue";
 export default {
     data() {
         return {
-            walletName: this.$route.params.walletName,
-            walletData: [],
-            graphData: [],
-            graphDays: null,
             currentLimit: 30,
         };
     },
     components: { WalletGraph },
     methods: {
-        async getGraphData(limit) {
-            const f = await fetch(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${this.walletName}&tsym=USD&limit=${limit}`);
-            const data = await f.json();
-            this.graphData = [];
-            data.Data.Data.forEach((coinData) => {
-                this.graphData.push(coinData.high);
-            });
-        },
-        async getWalletData() {
-            const f = await fetch(`https://min-api.cryptocompare.com/data/all/coinlist?fsym=${this.walletName}`);
-            const data = await f.json();
-            this.walletData = data.Data[this.walletName];
-            console.log(this.walletData);
-        },
-        updateGraphData(limit) {
-            if (this.graphDays > 2000) {
+        updateGraphData() {
+            if (this.$store.state.graphDays > 2000) {
                 return;
             }
-            this.getGraphData(limit);
-            this.currentLimit = limit;
-            this.graphDays = null;
+            this.$store.dispatch("getGraphData", this.currentLimit);
+            // this.currentLimit = limit;
+            // this.graphDays = null;
         },
         validateGraphDays(e) {
             e.target.value = e.target.value.replace(/\D/g, "");
         },
     },
     created() {
-        this.getGraphData(this.currentLimit);
-        this.getWalletData();
+        this.$store.dispatch("getGraphData", this.currentLimit);
+        this.$store.dispatch("getWalletData");
+        this.$store.commit("fakeSelectedTicker");
     },
 };
 </script>
