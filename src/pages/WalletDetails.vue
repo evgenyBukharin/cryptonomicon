@@ -24,16 +24,17 @@
             >
         </p>
         <div class="d-flex align-items-center">
-            <h4 class="me-3">Показать изменение курса валюты за последние:</h4>
+            <h4 class="converter__subtitle me-2">Изменить промежуток на последние</h4>
             <input
-                @input="(event) => validateGraphDays(event)"
-                v-model.number="this.$store.state.graphDays"
+                @input="(event) => validateCurrentLimit(event)"
+                v-model.number="this.$store.state.currentLimit"
                 type="text"
-                class="form-control form-control-md w-20 me-2"
-                placeholder="Введите количество дней"
+                class="form-control form-control-md me-2 input__days"
                 @keydown.enter="updateGraphData()"
             />
-            <div class="btn btn-success" @click="updateGraphData()">Показать</div>
+            <h4 class="input-text me-2">дней.</h4>
+
+            <button class="btn btn-success" @click="updateGraphData()">Показать</button>
         </div>
         <Wallet-graph :btnVisible="false" :graphSelWidth="'40px'" :title="true" />
     </div>
@@ -41,30 +42,38 @@
 <script>
 import WalletGraph from "../components/WalletGraph.vue";
 export default {
-    data() {
-        return {
-            currentLimit: 30,
-        };
-    },
     components: { WalletGraph },
     methods: {
         updateGraphData() {
-            if (this.$store.state.graphDays > 2000) {
+            if (this.$store.state.currentLimit > 2000) {
                 return;
             }
-            this.$store.dispatch("getGraphData", this.currentLimit);
-            // this.currentLimit = limit;
-            // this.graphDays = null;
+            this.$store.dispatch("getGraphData");
         },
-        validateGraphDays(e) {
+        validateCurrentLimit(e) {
             e.target.value = e.target.value.replace(/\D/g, "");
         },
     },
     created() {
-        this.$store.dispatch("getGraphData", this.currentLimit);
+        this.$store.dispatch("getGraphData");
         this.$store.dispatch("getWalletData");
         this.$store.commit("fakeSelectedTicker");
     },
 };
 </script>
-<style lang="scss"></style>
+<style lang="scss">
+.converter {
+    &__subtitle {
+        margin-bottom: 0;
+    }
+}
+
+.input {
+    &__days {
+        width: 65px;
+    }
+    &-text {
+        margin-bottom: 0;
+    }
+}
+</style>

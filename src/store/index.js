@@ -28,7 +28,8 @@ export default createStore({
 
         //wallet details page
         walletData: [],
-        graphDays: null,
+        currentLimit: 30,
+        graphDays: 30,
     },
     mutations: {
         addNewDependence(state) {
@@ -167,6 +168,7 @@ export default createStore({
             data.Data.Data.forEach((coinData) => {
                 state.graphData.push(coinData.high);
             });
+            state.graphDays = state.currentLimit;
         },
         getWalletData(state, data) {
             state.walletData = data.Data[router.currentRoute.value.params.walletName];
@@ -183,9 +185,9 @@ export default createStore({
             const data = await func.json();
             commit("setConverterData", data);
         },
-        async getGraphData({ commit }, limit) {
+        async getGraphData({ commit, state }) {
             const f = await fetch(
-                `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${router.currentRoute.value.params.walletName}&tsym=USD&limit=${limit}`
+                `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${router.currentRoute.value.params.walletName}&tsym=USD&limit=${state.currentLimit}`
             );
             const data = await f.json();
             commit("getGraphData", data);
