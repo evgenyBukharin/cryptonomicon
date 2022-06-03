@@ -30,6 +30,28 @@ export default createStore({
         walletData: [],
         currentLimit: 30,
         graphDays: 30,
+
+        // userAuth
+        login: "",
+        password: "",
+        userId: null,
+
+        //regUser
+        regLogin: "",
+        regPassword: "",
+        passwordConf: "",
+        name: "",
+        surname: "",
+        email: "",
+
+        // topList
+        topWalletsList: [],
+        topWalletsPages: [],
+        topWalletsPage: 1,
+        topWalletsLimit: 6,
+        walletsPerPage: 6,
+        topWalletsListLength: 100,
+        moreDataDisabled: false,
     },
     mutations: {
         addNewDependence(state) {
@@ -176,6 +198,26 @@ export default createStore({
         fakeSelectedTicker(state) {
             state.selectedTicker = "fake";
         },
+        async getTopListData(state, data) {
+            if (state.topWalletsLimit > state.topWalletsListLength) {
+                state.topWalletsLimit = state.topWalletsListLength;
+                state.moreDataDisabled = true;
+            }
+            state.topWalletsPages = [];
+            if (data.Message == "Success") {
+                state.topWalletsList = data.Data;
+            }
+            let pagesCount = Math.ceil(state.topWalletsList.length / state.walletsPerPage);
+            while (state.topWalletsPages.length < pagesCount) {
+                state.topWalletsPages.push(state.topWalletsPages.length + 1);
+            }
+        },
+        updateUserId(state, id) {
+            state.userId = id;
+        },
+        handleLogout(state) {
+            state.userId = null;
+        },
     },
     actions: {
         async setConverterData({ commit, state }) {
@@ -196,6 +238,11 @@ export default createStore({
             const f = await fetch(`https://min-api.cryptocompare.com/data/all/coinlist?fsym=${router.currentRoute.value.params.walletName}`);
             const data = await f.json();
             commit("getWalletData", data);
+        },
+        async getTopListData({ commit, state }) {
+            const func = await fetch(`https://min-api.cryptocompare.com/data/top/totalvolfull?limit=${state.topWalletsLimit}&tsym=USD`);
+            const data = await func.json();
+            commit("getTopListData", data);
         },
     },
     getters: {},

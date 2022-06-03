@@ -1,13 +1,13 @@
 <template>
     <div class="page container">
-        <form class="w-30" @submit.prevent="sendLoginData()">
-            <h1 class="h3 mb-3 fw-normal">Пожалуйста, войдите</h1>
+        <form class="w-30" @submit.prevent="handleLogin()">
+            <h1 class="h3 mb-3 fw-normal">Форма авторизации</h1>
             <div class="form-floating">
-                <input type="text" class="form-control mb-2" id="floatingInput" placeholder="login" v-model="login" />
+                <input type="text" class="form-control mb-2" id="floatingInput" placeholder="Ваш логин" v-model="$store.state.login" />
                 <label for="floatingInput">Введите ваш логин</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control mb-2" id="floatingPassword" placeholder="Password" v-model="password" />
+                <input type="password" class="form-control mb-2" id="floatingPassword" placeholder="Password" v-model="$store.state.password" />
                 <label for="floatingPassword">Введите пароль</label>
             </div>
             <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
@@ -20,37 +20,26 @@
 <script>
 import axios from "axios";
 export default {
-    data() {
-        return {
-            login: "",
-            password: "",
-        };
-    },
     methods: {
-        sendLoginData() {
+        handleLogin() {
             axios
                 .post("../php/login.php", {
-                    login: this.login,
-                    password: this.password,
+                    login: this.$store.state.login,
+                    password: this.$store.state.password,
                 })
                 .then((response) => this.handleSuccess(response.data));
         },
         handleSuccess(data) {
             if (data[0] == "Авторизация прошла успешно") {
                 if (data[1]) {
-                    localStorage.setItem("userId", data[1]);
-                    if (localStorage.getItem("tickers" + String(data[1])) == null) {
-                        localStorage.setItem("tickers" + localStorage.getItem("userId"), []);
+                    this.$store.commit("updateUserId", data[1]);
+                    if (localStorage.getItem("tickers" + this.$store.state.userId) == null) {
+                        localStorage.setItem("tickers" + this.$store.state.userId, []);
                     }
-                    location.href = "/";
+                    this.$router.push("/");
                 }
-            } else {
-                console.log(data[0]);
             }
         },
-    },
-    created() {
-        axios.get("https://api.spotify.com/v1/tracks/0UKQrQDMVcKN3ngG1kthYN?si=f267e8e292d44e1a");
     },
 };
 </script>

@@ -20,10 +20,10 @@
                 <li class="nav-item">
                     <router-link class="nav-link" to="/news">Новости</router-link>
                 </li>
-                <!-- <li class="nav-item" v-if="isUserLogged">
+                <li class="nav-item" v-if="$store.state.userId == null">
                     <router-link class="nav-link" to="/login">Войти</router-link>
-                </li> -->
-                <li v-if="showLogoutBtn" class="nav-item" @click="handleLogout"><div class="nav-link">Выйти</div></li>
+                </li>
+                <li v-if="$store.state.userId !== null" class="nav-item" @click="handleLogout"><div class="nav-link">Выйти</div></li>
             </ul>
         </header>
         <router-view v-slot="{ Component, route }">
@@ -37,21 +37,10 @@
 <script>
 export default {
     name: "App",
-    data() {
-        return {
-            isUserLogged: false,
-            showLogoutBtn: false,
-        };
-    },
     methods: {
         handleLogout() {
-            localStorage.removeItem("userId");
-            window.location.reload();
+            this.$store.commit("handleLogout");
         },
-    },
-    created() {
-        this.isUserLogged = localStorage.getItem("userId") == null;
-        this.showLogoutBtn = localStorage.getItem("userId") !== null;
     },
 };
 </script>

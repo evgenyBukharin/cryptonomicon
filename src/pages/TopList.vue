@@ -2,7 +2,7 @@
     <div class="page container">
         <h1 class="mb-4">Топ - лист валют за последние 24 часа</h1>
         <div class="row row-cols-2 g-4">
-            <div class="col" v-for="(wallet, i) in paginatedWalletsList()" :key="i">
+            <div class="col" v-for="(wallet, i) in paginatedtopWalletsList()" :key="i">
                 <div class="card">
                     <svg
                         class="card-img-top"
@@ -18,7 +18,7 @@
                     <div class="card-body d-flex justify-content-between">
                         <div class="mw-75">
                             <h5 class="card-title">
-                                #{{ i + 1 + (this.page - 1) * this.newsPerPage + " " }}
+                                #{{ i + 1 + ($store.state.topWalletsPage - 1) * $store.state.walletsPerPage + " " }}
                                 <router-link class="" aria-current="page" :to="'/wallet/' + wallet.CoinInfo?.Internal">{{
                                     wallet.CoinInfo?.FullName
                                 }}</router-link>
@@ -34,7 +34,8 @@
                             </p>
                         </div>
                         <img
-                            style="width: 150px; height: 150px"
+                            width="150"
+                            height="150"
                             v-bind:src="'https://www.cryptocompare.com' + wallet.CoinInfo?.ImageUrl"
                             :alt="wallet.CoinInfo?.FullName + ' image'"
                         />
@@ -43,12 +44,21 @@
             </div>
         </div>
         <div class="pages-container d-flex justify-content-center mt-3">
-            <button v-for="(page, i) in pages" :key="i" class="btn btn-outline-primary me-2" @click="this.page = page">
+            <button
+                v-for="(page, i) in $store.state.topWalletsPages"
+                :key="i"
+                class="btn btn-outline-primary me-2"
+                @click="$store.state.topWalletsPage = page"
+            >
                 {{ page }}
             </button>
         </div>
         <div class="d-flex justify-content-center my-3">
-            <button class="btn btn-primary w-auto" @click="this.getData((this.walletsLimit += this.newsPerPage))" :disabled="moreDataDisabled">
+            <button
+                class="btn btn-primary w-auto"
+                @click="$store.dispatch('getTopListData', (this.$store.state.topWalletsLimit += this.$store.state.walletsPerPage))"
+                :disabled="$store.state.moreDataDisabled"
+            >
                 Загрузить еще
             </button>
         </div>
@@ -56,55 +66,30 @@
 </template>
 <script>
 export default {
-    data() {
-        return {
-            walletsList: [],
-            walletsLimit: 6,
-            pages: [],
-            moreDataDisabled: false,
-            newsPerPage: 6,
-            maxTopListLenght: 100,
-            page: 1,
-        };
-    },
     methods: {
-        async getData() {
-            if (this.walletsLimit > this.maxTopListLenght) {
-                this.walletsLimit = this.maxTopListLenght;
-                this.moreDataDisabled = true;
-            }
-            this.pages = [];
-            const func = await fetch(`https://min-api.cryptocompare.com/data/top/totalvolfull?limit=${this.walletsLimit}&tsym=USD`);
-            const data = await func.json();
-            if (data.Message == "Success") {
-                this.walletsList = data.Data;
-            } else if (data.Response == "Error") {
-                console.log("Ошибочка да то есть");
-            }
-            let pagesCount = Math.ceil(this.walletsList.length / this.newsPerPage);
-            while (this.pages.length < pagesCount) {
-                this.pages.push(this.pages.length + 1);
-            }
-        },
-        paginatedWalletsList() {
-            return this.walletsList.slice(this.start, this.end);
+        paginatedtopWalletsList() {
+            return this.$store.state.topWalletsList.slice(this.start, this.end);
         },
     },
     created() {
-        this.getData();
+        this.$store.dispatch("getTopListData");
     },
     computed: {
         start() {
-            return this.page == this.lastPage ? this.walletsLimit - this.extraWalletCount : (this.page - 1) * this.newsPerPage;
+            return this.$store.state.topWalletsPage == this.lastPage
+                ? this.$store.state.topWalletsLimit - this.extraWalletCount
+                : (this.$store.state.topWalletsPage - 1) * this.$store.state.walletsPerPage;
         },
         end() {
-            return this.page == this.lastPage ? this.walletsLimit : this.page * this.newsPerPage;
+            return this.$store.state.topWalletsPage == this.lastPage
+                ? this.$store.state.topWalletsLimit
+                : this.$store.state.topWalletsPage * this.$store.state.walletsPerPage;
         },
         extraWalletCount() {
-            return this.walletsList.length % this.newsPerPage;
+            return this.$store.state.topWalletsList.length % this.$store.state.walletsPerPage;
         },
         lastPage() {
-            return Math.ceil(this.maxTopListLenght / this.newsPerPage);
+            return Math.ceil(this.$store.state.topWalletsListLength / this.$store.state.walletsPerPage);
         },
     },
 };

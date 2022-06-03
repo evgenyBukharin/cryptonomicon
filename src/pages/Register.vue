@@ -3,27 +3,33 @@
         <form class="w-30" @submit.prevent="sendRegData">
             <h1 class="h3 mb-3 fw-normal">Пожалуйста, зарегистрируйтесь</h1>
             <div class="form-floating">
-                <input type="text" class="form-control mb-2" id="floatingInput1" placeholder="login" v-model="login" />
+                <input type="text" class="form-control mb-2" id="floatingInput1" placeholder="login" v-model="$store.state.regLogin" />
                 <label for="floatingInput1">Введите ваш логин</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control mb-2" id="floatingPassword2" placeholder="Password" v-model="password" />
+                <input type="password" class="form-control mb-2" id="floatingPassword2" placeholder="Password" v-model="$store.state.regPassword" />
                 <label for="floatingPassword2">Введите пароль</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control mb-2" id="floatingPassword3" placeholder="PasswordConf" v-model="passwordConf" />
+                <input
+                    type="password"
+                    class="form-control mb-2"
+                    id="floatingPassword3"
+                    placeholder="PasswordConf"
+                    v-model="$store.state.passwordConf"
+                />
                 <label for="floatingPassword3">Подтвердите пароль</label>
             </div>
             <div class="form-floating">
-                <input type="text" class="form-control mb-2" id="floatingPassword4" placeholder="name" v-model="name" />
+                <input type="text" class="form-control mb-2" id="floatingPassword4" placeholder="name" v-model="$store.state.name" />
                 <label for="floatingPassword4">Введите ваше имя</label>
             </div>
             <div class="form-floating">
-                <input type="text" class="form-control mb-2" id="floatingPassword5" placeholder="surname" v-model="surname" />
+                <input type="text" class="form-control mb-2" id="floatingPassword5" placeholder="surname" v-model="$store.state.surname" />
                 <label for="floatingPassword5">Введите вашу фамилию</label>
             </div>
             <div class="form-floating">
-                <input type="email" class="form-control mb-2" id="floatingPassword6" placeholder="surname" v-model="email" />
+                <input type="email" class="form-control mb-2" id="floatingPassword6" placeholder="surname" v-model="$store.state.email" />
                 <label for="floatingPassword6">Введите ваш email</label>
             </div>
             <button class="w-100 btn btn-lg btn-primary" type="submit">Зарегистрироваться</button>
@@ -33,25 +39,15 @@
 <script>
 import axios from "axios";
 export default {
-    data() {
-        return {
-            login: "",
-            password: "",
-            passwordConf: "",
-            name: "",
-            surname: "",
-            email: "",
-        };
-    },
     methods: {
         sendRegData() {
             axios
                 .post("../php/reg.php", {
-                    login: this.login,
-                    password: this.password,
-                    name: this.name,
-                    surname: this.surname,
-                    email: this.email,
+                    login: this.$store.state.regLogin,
+                    password: this.$store.state.regPassword,
+                    name: this.$store.state.name,
+                    surname: this.$store.state.surname,
+                    email: this.$store.state.email,
                 })
                 .then((response) => this.handleSuccess(response.data))
                 .catch(function (error) {
@@ -60,7 +56,7 @@ export default {
         },
         handleSuccess(message) {
             if (message == "Регистрация прошла успешно. Теперь вы можете авторизироваться в ваш аккаунт.") {
-                window.location.href = "/login";
+                this.$router.push("/login");
             } else {
                 console.log(message);
             }
