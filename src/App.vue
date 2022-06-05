@@ -40,6 +40,8 @@ export default {
     methods: {
         handleLogout() {
             this.$store.commit("handleLogout");
+            localStorage.removeItem("userId");
+            location.href = "/";
         },
     },
 };

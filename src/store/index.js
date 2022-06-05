@@ -149,14 +149,14 @@ export default createStore({
                 if (data.Response == "Error") {
                     clearInterval(intervalId);
                     state.tickers.splice(state.tickers.indexOf(state.ticker), 1);
-                    let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
+                    let storagedTickers = JSON.parse(localStorage.getItem("tickers" + this.$store.state.userId));
                     storagedTickers.splice(
                         storagedTickers.findIndex((t) => {
                             ticker.name == t.name && ticker.dependence == t.name;
                         }),
                         1
                     );
-                    localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
+                    localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify(storagedTickers));
                 }
                 state.tickers.find((t) => t.name == ticker.name && t.dependence == ticker.dependence).price =
                     data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
@@ -217,6 +217,9 @@ export default createStore({
         },
         handleLogout(state) {
             state.userId = null;
+        },
+        updateTickersAfterAuth(state, tickers) {
+            state.tickers = tickers;
         },
     },
     actions: {

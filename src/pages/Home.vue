@@ -56,19 +56,18 @@ import WalletGraph from "../components/WalletGraph.vue";
 export default {
     name: "App",
     components: { AddTicker, WalletGraph },
-    props: ["userId"],
     methods: {
         deleteTicker(tickerToDelete) {
             this.$store.commit("handleDeleteTicker", tickerToDelete);
             clearInterval(tickerToDelete.intId);
-            let storagedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
+            let storagedTickers = JSON.parse(localStorage.getItem("tickers" + this.$store.state.userId));
             storagedTickers.splice(
                 storagedTickers.findIndex((ticker) => {
                     tickerToDelete.name == ticker.name && tickerToDelete.dependence == ticker.name;
                 }),
                 1
             );
-            localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(storagedTickers));
+            localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify(storagedTickers));
         },
         filteredTickers() {
             const filteredTickers = this.$store.state.tickers.filter((t) => t.name.includes(this.$store.state.filter));
@@ -86,7 +85,8 @@ export default {
         },
     },
     created() {
-        let savedTickers = JSON.parse(localStorage.getItem("tickers" + String(localStorage.getItem("userId"))));
+        this.$store.commit("updateUserId", localStorage.getItem("userId"));
+        let savedTickers = JSON.parse(localStorage.getItem("tickers" + this.$store.state.userId));
         if (savedTickers?.length > 0) {
             savedTickers.forEach((ticker) => {
                 this.$store.commit("addTicker", ticker);

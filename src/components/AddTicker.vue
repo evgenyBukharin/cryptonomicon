@@ -53,7 +53,7 @@ export default {
             };
             this.$store.commit("addTicker", currentTicker);
             this.$store.commit("subscribeOnUpdates", currentTicker);
-            localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(this.$store.state.tickers));
+            localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify(this.$store.state.tickers));
         },
         addMatchedTicker(match) {
             if (this.alreadyExists(match)) {
@@ -66,7 +66,7 @@ export default {
             };
             this.$store.commit("addMatchedTicker", matchedTicker);
             this.$store.commit("subscribeOnUpdates", matchedTicker);
-            localStorage.setItem("tickers" + String(localStorage.getItem("userId")), JSON.stringify(this.$store.state.tickers));
+            localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify(this.$store.state.tickers));
         },
         alreadyExists(tickerName) {
             for (let i = 0; i < this.$store.state.tickers.length; i++) {

@@ -33,10 +33,11 @@ export default {
             if (data[0] == "Авторизация прошла успешно") {
                 if (data[1]) {
                     this.$store.commit("updateUserId", data[1]);
+                    localStorage.setItem("userId", data[1]);
                     if (localStorage.getItem("tickers" + this.$store.state.userId) == null) {
-                        localStorage.setItem("tickers" + this.$store.state.userId, []);
+                        localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify([]));
                     }
-                    this.$router.push("/");
+                    location.href = "/";
                 }
             }
         },
