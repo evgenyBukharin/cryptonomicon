@@ -35,6 +35,7 @@ export default createStore({
         login: "",
         password: "",
         userId: null,
+        userRole: "",
 
         //regUser
         regLogin: "",
@@ -55,7 +56,7 @@ export default createStore({
 
         // modal
         showModal: false,
-        modalText: 'Текст уведомления',
+        modalText: "Текст уведомления",
     },
     mutations: {
         addNewDependence(state) {
@@ -146,9 +147,7 @@ export default createStore({
         },
         subscribeOnUpdates(state, ticker) {
             let intervalId = setInterval(async () => {
-                const func = await fetch(
-                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
-                );
+                const func = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`);
                 const data = await func.json();
                 if (data.Response == "Error") {
                     clearInterval(intervalId);
@@ -162,8 +161,7 @@ export default createStore({
                     );
                     localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify(storagedTickers));
                 }
-                state.tickers.find((t) => t.name == ticker.name && t.dependence == ticker.dependence).price =
-                    data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
+                state.tickers.find((t) => t.name == ticker.name && t.dependence == ticker.dependence).price = data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
                 if (ticker.name == state.selectedTicker?.name && ticker.dependence == state.selectedTicker?.dependence) {
                     state.graphData.push(data[ticker.dependence]);
                 }
@@ -219,6 +217,9 @@ export default createStore({
         updateUserId(state, id) {
             state.userId = id;
         },
+        updateUserRole(state, role) {
+            state.userRole = role;
+        },
         handleLogout(state) {
             state.userId = null;
         },
@@ -228,22 +229,19 @@ export default createStore({
         closeModal(state) {
             state.showModal = false;
         },
-        showModal(state) {
+        showModal(state, text) {
+            state.modalText = text;
             state.showModal = true;
         },
     },
     actions: {
         async setConverterData({ commit, state }) {
-            const func = await fetch(
-                `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${state.secondWallet},${state.firstWallet}&tsyms=${state.firstWallet},${state.secondWallet}`
-            );
+            const func = await fetch(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${state.secondWallet},${state.firstWallet}&tsyms=${state.firstWallet},${state.secondWallet}`);
             const data = await func.json();
             commit("setConverterData", data);
         },
         async getGraphData({ commit, state }) {
-            const f = await fetch(
-                `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${router.currentRoute.value.params.walletName}&tsym=USD&limit=${state.currentLimit}`
-            );
+            const f = await fetch(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${router.currentRoute.value.params.walletName}&tsym=USD&limit=${state.currentLimit}`);
             const data = await f.json();
             commit("getGraphData", data);
         },

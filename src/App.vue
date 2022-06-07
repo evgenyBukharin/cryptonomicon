@@ -4,7 +4,6 @@
     </transition>
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-            <button class="btn btn-primary" @click="$store.commit('showModal')">Модалка</button>
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
                 <svg class="bi me-2" width="40" height="32">
                     <use xlink:href="#bootstrap"></use>
@@ -27,7 +26,7 @@
                 <li class="nav-item" v-if="$store.state.userId == null">
                     <router-link class="nav-link" to="/login">Войти</router-link>
                 </li>
-                <li v-if="$store.state.userId !== null" class="nav-item" @click="handleLogout"><div class="nav-link">Выйти</div></li>
+                <li v-if="$store.state.userId !== null" class="nav-item cursor-pointer" @click="handleLogout"><div class="nav-link">Выйти</div></li>
             </ul>
         </header>
         <router-view v-slot="{ Component, route }">
@@ -47,7 +46,8 @@ export default {
         handleLogout() {
             this.$store.commit("handleLogout");
             localStorage.removeItem("userId");
-            location.href = "/";
+            localStorage.removeItem("userRole");
+            this.$router.push("/");
         },
     },
 };
@@ -67,5 +67,9 @@ export default {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }
 </style>

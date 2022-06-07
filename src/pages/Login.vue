@@ -11,10 +11,10 @@
                 <label for="floatingPassword">Введите пароль</label>
             </div>
             <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
+            <h4>
+                <router-link class="nav-link" to="/register">Еще не зарегистированы? Зарегистрироваться</router-link>
+            </h4>
         </form>
-        <h4>
-            <router-link class="nav-link" to="/register">Еще не зарегистированы? Зарегистрироваться</router-link>
-        </h4>
     </div>
 </template>
 <script>
@@ -33,12 +33,17 @@ export default {
             if (data[0] == "Авторизация прошла успешно") {
                 if (data[1]) {
                     this.$store.commit("updateUserId", data[1]);
+                    this.$store.commit("updateUserRole", data[2]);
                     localStorage.setItem("userId", data[1]);
+                    localStorage.setItem("userRole", data[2]);
                     if (localStorage.getItem("tickers" + this.$store.state.userId) == null) {
                         localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify([]));
                     }
-                    location.href = "/";
+                    this.$router.push("/");
+                    this.$store.commit("showModal", "Вы успешно авторизированны");
                 }
+            } else {
+                this.$store.commit("showModal", data[0]);
             }
         },
     },
