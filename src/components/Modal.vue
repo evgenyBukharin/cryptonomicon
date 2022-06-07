@@ -1,23 +1,17 @@
 <template>
-    <div class="modal__background" ref="modalBg">
+    <div class="modal__background">
         <div class="modal__body">
             <h3 class="modal__title">Уведомление</h3>
             <hr class="mt-2" />
-            <p class="modal__text" ref="modalText">Элемент для отображения текста</p>
+            <p class="modal__text">{{ $store.state.modalText }}</p>
             <div class="modal__buttons">
-                <button @click="closeModal" class="btn btn-primary">Закрыть</button>
+                <button class="btn btn-primary" @click="$store.commit('closeModal')">Закрыть</button>
             </div>
         </div>
     </div>
 </template>
 <script>
-export default {
-    methods: {
-        closeModal() {
-            this.$refs.modalBg.classList.add("modal__background-hidden");
-        },
-    },
-};
+export default {};
 </script>
 <style lang="scss">
 .modal {
@@ -30,13 +24,6 @@ export default {
         left: 0;
         z-index: 1000;
         opacity: 0.9;
-        visibility: visible;
-        transition: all 0.3s ease;
-        &-hidden {
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
     }
     &__body {
         background: var(--bs-light);

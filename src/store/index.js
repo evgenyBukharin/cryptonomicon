@@ -52,6 +52,10 @@ export default createStore({
         walletsPerPage: 6,
         topWalletsListLength: 100,
         moreDataDisabled: false,
+
+        // modal
+        showModal: false,
+        modalText: 'Текст уведомления',
     },
     mutations: {
         addNewDependence(state) {
@@ -220,6 +224,12 @@ export default createStore({
         },
         updateTickersAfterAuth(state, tickers) {
             state.tickers = tickers;
+        },
+        closeModal(state) {
+            state.showModal = false;
+        },
+        showModal(state) {
+            state.showModal = true;
         },
     },
     actions: {

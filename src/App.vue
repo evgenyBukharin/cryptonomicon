@@ -1,7 +1,10 @@
 <template>
-    <Modal ref="modalBg" />
+    <transition name="fade">
+        <Modal v-if="$store.state.showModal" />
+    </transition>
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <button class="btn btn-primary" @click="$store.commit('showModal')">Модалка</button>
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
                 <svg class="bi me-2" width="40" height="32">
                     <use xlink:href="#bootstrap"></use>
@@ -21,7 +24,6 @@
                 <li class="nav-item">
                     <router-link class="nav-link" to="/news">Новости</router-link>
                 </li>
-                <li class="nav-item" @click="showModal">тест хуня</li>
                 <li class="nav-item" v-if="$store.state.userId == null">
                     <router-link class="nav-link" to="/login">Войти</router-link>
                 </li>
@@ -56,5 +58,14 @@ export default {
 @import "bootstrap";
 .page {
     position: absolute;
+}
+.fade-enter-active,
+.fade-leave-active {
+    transition: all 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 </style>
