@@ -85,6 +85,7 @@ export default {
         },
     },
     created() {
+        this.$store.state.tickers = [];
         this.$store.commit("updateUserId", localStorage.getItem("userId"));
         let savedTickers = JSON.parse(localStorage.getItem("tickers" + this.$store.state.userId));
         if (savedTickers?.length > 0) {

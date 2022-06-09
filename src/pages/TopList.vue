@@ -72,7 +72,9 @@ export default {
         },
     },
     created() {
-        this.$store.dispatch("getTopListData");
+        if (this.$store.state.topWalletsList.length !== null) {
+            this.$store.dispatch("getTopListData");
+        }
     },
     computed: {
         start() {
