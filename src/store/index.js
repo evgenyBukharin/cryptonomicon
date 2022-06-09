@@ -44,6 +44,7 @@ export default createStore({
         name: "",
         surname: "",
         email: "",
+        rules: false,
 
         // topList
         topWalletsList: [],

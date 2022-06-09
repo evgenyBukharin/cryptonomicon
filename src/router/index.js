@@ -7,6 +7,7 @@ import Login from "../pages/Login.vue";
 import Register from "../pages/Register.vue";
 import Admin from "../pages/Admin.vue";
 import Converter from "../pages/Converter.vue";
+import Rules from "../pages/Rules.vue";
 
 const routes = [
     {
@@ -76,6 +77,15 @@ const routes = [
         path: "/admin",
         name: "Admin",
         component: Admin,
+        meta: {
+            enterClass: "animate__animated animate__fast animate__fadeInRight",
+            leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
+        },
+    },
+    {
+        path: "/rules",
+        name: "Rules",
+        component: Rules,
         meta: {
             enterClass: "animate__animated animate__fast animate__fadeInRight",
             leaveClass: "animate__animated animate__fast animate__fadeOutLeft",

@@ -26,6 +26,10 @@
                 <input type="text" class="form-control mb-2 w-50" id="floatingPassword6" placeholder="surname" v-model="$store.state.email" />
                 <label for="floatingPassword6">Введите ваш email</label>
             </div>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" v-model="$store.state.rules" />
+                <label class="form-check-label" for="flexCheckDefault">Согласен с <router-link to="/rules">политикой конфиденциальности</router-link></label>
+            </div>
             <button class="btn btn-lg btn-primary w-50" type="submit">Зарегистрироваться</button>
         </form>
     </div>
@@ -41,22 +45,26 @@ export default {
                         if (/[А-Яа-яЁё\s-]{2,}/.test(this.$store.state.name)) {
                             if (/[А-Яа-яЁё\s-]{2,}/.test(this.$store.state.surname)) {
                                 if (/^([A-z0-9_.-]{2,})@([A-z0-9_-]{2,}).([A-z]{2,})/.test(this.$store.state.email)) {
-                                    axios
-                                        .post("../php/reg.php", {
-                                            login: this.$store.state.regLogin,
-                                            password: this.$store.state.regPassword,
-                                            name: this.$store.state.name,
-                                            surname: this.$store.state.surname,
-                                            email: this.$store.state.email,
-                                        })
-                                        .then((response) => {
-                                            this.handleSuccess(response.data);
-                                        })
-                                        .catch(function (error) {
-                                            console.log(error);
-                                        });
+                                    if (this.$store.state.rules == true) {
+                                        axios
+                                            .post("../php/reg.php", {
+                                                login: this.$store.state.regLogin,
+                                                password: this.$store.state.regPassword,
+                                                name: this.$store.state.name,
+                                                surname: this.$store.state.surname,
+                                                email: this.$store.state.email,
+                                            })
+                                            .then((response) => {
+                                                this.handleSuccess(response.data);
+                                            })
+                                            .catch(function (error) {
+                                                console.log(error);
+                                            });
+                                    } else {
+                                        this.$store.commit("showModal", "Согласитесь с правилами регистрации");
+                                    }
                                 } else {
-                                    this.$store.commit("showModal", "Адрес электронной почты должен написан в соответствии с этой маской XXX@XXX.XXX");
+                                    this.$store.commit("showModal", "Адрес электронной почты должен написан в соответствии с этой маской XXX@XXX.XXX (количество «X» не важно).");
                                 }
                             } else {
                                 this.$store.commit("showModal", "Фамилия должна состоять только из русских букв и быть длиной более одного символа.");
@@ -68,7 +76,7 @@ export default {
                         this.$store.commit("showModal", "Введенные пароли не совпадают.");
                     }
                 } else {
-                    this.$store.commit("showModal", "Пароль должен быть как минимум из 6 символов");
+                    this.$store.commit("showModal", "Пароль должен состоять как минимум из 6 символов.");
                 }
             } else {
                 this.$store.commit("showModal", "Логин должен состоять только из английских букв, цифр или знака подчеркивания, длиннее двух символов.");
