@@ -57,7 +57,7 @@ export default {
                     } else {
                         this.$router.push("/");
                     }
-                    this.$store.commit("showModal", "Вы успешно авторизированны");
+                    this.$store.commit("showModal", "Вы успешно авторизированны.");
                     this.$store.commit("clearAuthForm");
                 }
             } else {
