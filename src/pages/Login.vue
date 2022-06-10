@@ -52,7 +52,11 @@ export default {
                         localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify([]));
                     }
                     this.$store.commit("clearTickers");
-                    this.$router.push("/");
+                    if (data[2] == "admin") {
+                        this.$router.push("/admin");
+                    } else {
+                        this.$router.push("/");
+                    }
                     this.$store.commit("showModal", "Вы успешно авторизированны");
                     this.$store.commit("clearAuthForm");
                 }
