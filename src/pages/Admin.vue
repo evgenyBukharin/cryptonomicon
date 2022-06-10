@@ -89,6 +89,7 @@ export default {
         } else {
             this.$router.push("/");
         }
+        this.$store.commit("updateUserId", localStorage.getItem("userId"));
     },
 };
 </script>

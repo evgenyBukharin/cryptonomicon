@@ -62,9 +62,7 @@ export default {
             clearInterval(tickerToDelete.intId);
             let storagedTickers = JSON.parse(localStorage.getItem("tickers" + this.$store.state.userId));
             storagedTickers.splice(
-                storagedTickers.findIndex((ticker) => {
-                    tickerToDelete.name == ticker.name && tickerToDelete.dependence == ticker.name;
-                }),
+                storagedTickers.findIndex((ticker) => ticker.name == tickerToDelete.name && ticker.dependence == tickerToDelete.dependence),
                 1
             );
             localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify(storagedTickers));

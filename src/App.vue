@@ -26,7 +26,9 @@
                 <li class="nav-item" v-if="$store.state.userId == null">
                     <router-link class="nav-link" to="/login">Войти</router-link>
                 </li>
-                <li v-if="$store.state.userId !== null" class="nav-item cursor-pointer" @click="handleLogout"><div class="nav-link">Выйти</div></li>
+                <li v-if="$store.state.userId !== null" class="nav-item cursor-pointer" @click="handleLogout">
+                    <div class="nav-link">Выйти</div>
+                </li>
             </ul>
         </header>
         <router-view v-slot="{ Component, route }">
@@ -45,8 +47,20 @@ export default {
     methods: {
         handleLogout() {
             this.$store.commit("handleLogout");
+            this.$store.commit("clearTickers");
+            this.$store.commit("clearAuthForm");
             localStorage.removeItem("userId");
             localStorage.removeItem("userRole");
+            let savedTickers = JSON.parse(localStorage.getItem("tickers" + this.$store.state.userId));
+            if (savedTickers?.length > 0) {
+                savedTickers.forEach((ticker) => {
+                    this.$store.commit("addTicker", ticker);
+                });
+            }
+            this.$store.state.tickers.forEach((t) => {
+                this.$store.commit("subscribeOnUpdates", t);
+            });
+            this.$store.commit("setSelectedTicker", null);
             this.$router.push("/");
         },
     },

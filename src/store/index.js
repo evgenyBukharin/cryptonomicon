@@ -99,7 +99,10 @@ export default createStore({
             }
         },
         handleDeleteTicker(state, tickerToDelete) {
-            state.tickers.splice(state.tickers.indexOf(tickerToDelete), 1);
+            state.tickers.splice(
+                state.tickers.findIndex((ticker) => ticker.name == tickerToDelete.name && ticker.dependence == tickerToDelete.dependence),
+                1
+            );
             if (tickerToDelete.name == state.selectedTicker?.name && tickerToDelete.dependence == state.selectedTicker?.dependence) {
                 state.selectedTicker = null;
                 state.graphData = [];
@@ -148,7 +151,9 @@ export default createStore({
         },
         subscribeOnUpdates(state, ticker) {
             let intervalId = setInterval(async () => {
-                const func = await fetch(`https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`);
+                const func = await fetch(
+                    `https://min-api.cryptocompare.com/data/price?fsym=${ticker.name}&tsyms=${ticker.dependence}&api_key=12b3b18cc96834a9aeed3f00da3ad8f961ce337a5023711a8bcc1796b8d19adc`
+                );
                 const data = await func.json();
                 if (data.Response == "Error") {
                     clearInterval(intervalId);
@@ -162,7 +167,8 @@ export default createStore({
                     );
                     localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify(storagedTickers));
                 }
-                state.tickers.find((t) => t.name == ticker.name && t.dependence == ticker.dependence).price = data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
+                state.tickers.find((t) => t.name == ticker.name && t.dependence == ticker.dependence).price =
+                    data[ticker.dependence] > 1 ? data[ticker.dependence].toFixed(2) : data[ticker.dependence].toPrecision(2);
                 if (ticker.name == state.selectedTicker?.name && ticker.dependence == state.selectedTicker?.dependence) {
                     state.graphData.push(data[ticker.dependence]);
                 }
@@ -201,11 +207,7 @@ export default createStore({
         fakeSelectedTicker(state) {
             state.selectedTicker = "fake";
         },
-        async getTopListData(state, data) {
-            if (state.topWalletsLimit > state.topWalletsListLength) {
-                state.topWalletsLimit = state.topWalletsListLength;
-                state.moreDataDisabled = true;
-            }
+        getTopListData(state, data) {
             state.topWalletsPages = [];
             if (data.Message == "Success") {
                 state.topWalletsList = data.Data;
@@ -234,24 +236,44 @@ export default createStore({
             state.modalText = text;
             state.showModal = true;
         },
+        clearTickers(state) {
+            state.tickers = [];
+        },
+        clearAuthForm(state) {
+            state.login = "";
+            state.password = "";
+        },
+        clearNewDependence(state) {
+            state.newDependence = "";
+        },
     },
     actions: {
         async setConverterData({ commit, state }) {
-            const func = await fetch(`https://min-api.cryptocompare.com/data/pricemulti?fsyms=${state.secondWallet},${state.firstWallet}&tsyms=${state.firstWallet},${state.secondWallet}`);
+            const func = await fetch(
+                `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${state.secondWallet},${state.firstWallet}&tsyms=${state.firstWallet},${state.secondWallet}`
+            );
             const data = await func.json();
             commit("setConverterData", data);
         },
         async getGraphData({ commit, state }) {
-            const f = await fetch(`https://min-api.cryptocompare.com/data/v2/histoday?fsym=${router.currentRoute.value.params.walletName}&tsym=USD&limit=${state.currentLimit}`);
+            const f = await fetch(
+                `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${router.currentRoute.value.params.walletName}&tsym=USD&limit=${state.currentLimit}`
+            );
             const data = await f.json();
             commit("getGraphData", data);
         },
         async getWalletData({ commit }) {
-            const f = await fetch(`https://min-api.cryptocompare.com/data/all/coinlist?fsym=${router.currentRoute.value.params.walletName}`);
+            const f = await fetch(
+                `https://min-api.cryptocompare.com/data/all/coinlist?fsym=${router.currentRoute.value.params.walletName}`
+            );
             const data = await f.json();
             commit("getWalletData", data);
         },
         async getTopListData({ commit, state }) {
+            if (state.topWalletsLimit > 100) {
+                state.topWalletsLimit = 100;
+                state.moreDataDisabled = true;
+            }
             const func = await fetch(`https://min-api.cryptocompare.com/data/top/totalvolfull?limit=${state.topWalletsLimit}&tsym=USD`);
             const data = await func.json();
             commit("getTopListData", data);

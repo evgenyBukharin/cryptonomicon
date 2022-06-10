@@ -27,19 +27,29 @@
                         placeholder="Введите название валюты..."
                         v-model="$store.state.newDependence"
                         @input="$store.commit('newDepInputHandle')"
+                        @keydown.enter="addNewDependence"
                     />
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary" @click="$store.commit('addNewDependence')" data-bs-dismiss="modal">
-                        Добавить
-                    </button>
+                    <button type="button" class="btn btn-primary" @click="addNewDependence" data-bs-dismiss="modal">Добавить</button>
                 </div>
             </div>
         </div>
     </div>
 </template>
 <script>
-export default {};
+export default {
+    methods: {
+        addNewDependence() {
+            if (this.$store.state.walletList.findIndex((wallet) => wallet == this.$store.state.newDependence) == -1) {
+                this.$store.commit("addNewDependence");
+            } else {
+                this.$store.commit("showModal", "Введенная валюта уже добавлена в список зависимостей.");
+            }
+            this.$store.commit("clearNewDependence");
+        },
+    },
+};
 </script>
-<style lang=""></style>
+<style lang="scss"></style>

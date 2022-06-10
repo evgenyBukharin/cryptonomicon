@@ -18,7 +18,9 @@
             </div>
             <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
             <h4>
-                <router-link class="nav-link" to="/register">Еще не зарегистированы? Зарегистрироваться</router-link>
+                <router-link class="nav-link" to="/register"
+                    >Еще не зарегистированы? <span class="text-decoration-underline">Зарегистрироваться</span></router-link
+                >
             </h4>
         </form>
     </div>
@@ -28,12 +30,16 @@ import axios from "axios";
 export default {
     methods: {
         handleLogin() {
-            axios
-                .post("../php/login.php", {
-                    login: this.$store.state.login,
-                    password: this.$store.state.password,
-                })
-                .then((response) => this.handleSuccess(response.data));
+            if (this.$store.state.login !== "" && this.$store.state.password !== "") {
+                axios
+                    .post("../php/login.php", {
+                        login: this.$store.state.login,
+                        password: this.$store.state.password,
+                    })
+                    .then((response) => this.handleSuccess(response.data));
+            } else {
+                this.$store.commit("showModal", "Пожалуйста, заполните все поля.");
+            }
         },
         handleSuccess(data) {
             if (data[0] == "Авторизация прошла успешно") {
@@ -45,9 +51,10 @@ export default {
                     if (localStorage.getItem("tickers" + this.$store.state.userId) == null) {
                         localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify([]));
                     }
-                    // this.$store.state.tickers = []; Проверить билдом на локалке
+                    this.$store.commit("clearTickers");
                     this.$router.push("/");
                     this.$store.commit("showModal", "Вы успешно авторизированны");
+                    this.$store.commit("clearAuthForm");
                 }
             } else {
                 this.$store.commit("showModal", data[0]);
