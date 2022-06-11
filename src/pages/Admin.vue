@@ -1,6 +1,6 @@
 <template>
     <div class="page container">
-        <h1 class="mb-4">Страница администратора</h1>
+        <h1 class="mb-4">Панель администратора</h1>
         <div class="row row-cols-2 g-4">
             <div class="col" v-for="(user, i) in users" :key="i">
                 <div class="card">

@@ -202,7 +202,11 @@ export default createStore({
             state.graphDays = state.currentLimit;
         },
         getWalletData(state, data) {
-            state.walletData = data.Data[router.currentRoute.value.params.walletName];
+            if (data.Response == "Error") {
+                this.$router.push("/404");
+            } else {
+                state.walletData = data.Data[router.currentRoute.value.params.walletName];
+            }
         },
         fakeSelectedTicker(state) {
             state.selectedTicker = "fake";

@@ -8,6 +8,7 @@ import Register from "../pages/Register.vue";
 import Admin from "../pages/Admin.vue";
 import Converter from "../pages/Converter.vue";
 import Rules from "../pages/Rules.vue";
+import NotFound from "../pages/404.vue";
 
 const routes = [
     {
@@ -92,8 +93,17 @@ const routes = [
         },
     },
     {
+        path: "/404",
+        name: "404",
+        component: NotFound,
+        meta: {
+            enterClass: "animate__animated animate__fast animate__fadeInRight",
+            leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
+        },
+    },
+    {
         path: "/:catchAll(.*)",
-        redirect: "/",
+        redirect: "/404",
     },
 ];
 
