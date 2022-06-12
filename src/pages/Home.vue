@@ -84,7 +84,7 @@ export default {
     },
     created() {
         this.$store.state.tickers = [];
-        this.$store.commit("updateUserId", localStorage.getItem("userId"));
+        this.$store.commit("updateUserId", localStorage.getItem("userId")); // чет мне кажется не безопасно хранить userId в локал сторадже цифрой
         let savedTickers = JSON.parse(localStorage.getItem("tickers" + this.$store.state.userId));
         if (savedTickers?.length > 0) {
             savedTickers.forEach((ticker) => {

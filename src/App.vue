@@ -50,7 +50,6 @@ export default {
             this.$store.commit("clearTickers");
             this.$store.commit("clearAuthForm");
             localStorage.removeItem("userId");
-            localStorage.removeItem("userRole");
             let savedTickers = JSON.parse(localStorage.getItem("tickers" + this.$store.state.userId));
             if (savedTickers?.length > 0) {
                 savedTickers.forEach((ticker) => {

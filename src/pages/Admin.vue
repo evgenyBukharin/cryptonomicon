@@ -24,9 +24,6 @@
                             <h5 class="card-title">Email: {{ user.email }}</h5>
                             <h5 class="card-title">Аккаунт создан: {{ user.regDate }}</h5>
                             <h5 class="card-title">Роль: {{ user.role }}</h5>
-                            <button v-if="user.role == 'user'" class="btn btn-success me-2" @click="changeRole(user.id, 'admin')">
-                                Сделать администратором
-                            </button>
                             <button v-if="user.id !== $store.state.userId" class="btn btn-danger text-white" @click="deleteUser(user.id)">
                                 Удалить аккаунт
                             </button>
@@ -83,8 +80,8 @@ export default {
                 });
         },
     },
-    created() {
-        if (localStorage.getItem("userRole") == "admin") {
+    mounted() {
+        if (this.$store.state.userId == 1) {
             this.getData();
         } else {
             this.$router.push("/");

@@ -45,20 +45,18 @@ export default {
             if (data[0] == "Авторизация прошла успешно") {
                 if (data[1]) {
                     this.$store.commit("updateUserId", data[1]);
-                    this.$store.commit("updateUserRole", data[2]);
                     localStorage.setItem("userId", data[1]);
-                    localStorage.setItem("userRole", data[2]);
                     if (localStorage.getItem("tickers" + this.$store.state.userId) == null) {
                         localStorage.setItem("tickers" + this.$store.state.userId, JSON.stringify([]));
                     }
                     this.$store.commit("clearTickers");
-                    if (data[2] == "admin") {
+                    this.$store.commit("clearAuthForm");
+                    if (data[1] == 1) {
                         this.$router.push("/admin");
                     } else {
                         this.$router.push("/");
                     }
                     this.$store.commit("showModal", "Вы успешно авторизированны.");
-                    this.$store.commit("clearAuthForm");
                 }
             } else {
                 this.$store.commit("showModal", data[0]);

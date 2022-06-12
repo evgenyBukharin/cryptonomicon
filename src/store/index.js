@@ -35,7 +35,6 @@ export default createStore({
         login: "",
         password: "",
         userId: null,
-        userRole: "",
 
         //regUser
         regLogin: "",
@@ -223,9 +222,6 @@ export default createStore({
         },
         updateUserId(state, id) {
             state.userId = id;
-        },
-        updateUserRole(state, role) {
-            state.userRole = role;
         },
         handleLogout(state) {
             state.userId = null;
