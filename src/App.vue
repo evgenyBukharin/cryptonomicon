@@ -76,13 +76,14 @@ export default {
 .fade-leave-active {
     transition: all 0.5s ease;
 }
-
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
 }
-
 .cursor-pointer {
     cursor: pointer;
+}
+body {
+    background: url("/assets/cancel.png") 100% 100%;
 }
 </style>

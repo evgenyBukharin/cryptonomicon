@@ -156,6 +156,9 @@ export default createStore({
                 const data = await func.json();
                 if (data.Response == "Error") {
                     clearInterval(intervalId);
+                    state.graph = [];
+                    state.selectedTicker = null;
+                    state.walletMatches = [];
                     state.tickers.splice(state.tickers.indexOf(state.ticker), 1);
                     let storagedTickers = JSON.parse(localStorage.getItem("tickers" + this.$store.state.userId));
                     storagedTickers.splice(
