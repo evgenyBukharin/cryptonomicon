@@ -83,7 +83,4 @@ export default {
 .cursor-pointer {
     cursor: pointer;
 }
-body {
-    background: url("/assets/cancel.png") 100% 100%;
-}
 </style>
