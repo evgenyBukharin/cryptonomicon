@@ -7,11 +7,23 @@
                 <label for="floatingInput1">Введите ваш логин</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control mb-2 w-50" id="floatingPassword2" placeholder="Password" v-model="$store.state.regPassword" />
+                <input
+                    type="password"
+                    class="form-control mb-2 w-50"
+                    id="floatingPassword2"
+                    placeholder="Password"
+                    v-model="$store.state.regPassword"
+                />
                 <label for="floatingPassword2">Введите пароль</label>
             </div>
             <div class="form-floating">
-                <input type="password" class="form-control mb-2 w-50" id="floatingPassword3" placeholder="PasswordConf" v-model="$store.state.passwordConf" />
+                <input
+                    type="password"
+                    class="form-control mb-2 w-50"
+                    id="floatingPassword3"
+                    placeholder="PasswordConf"
+                    v-model="$store.state.passwordConf"
+                />
                 <label for="floatingPassword3">Подтвердите пароль</label>
             </div>
             <div class="form-floating">
@@ -19,16 +31,30 @@
                 <label for="floatingPassword4">Введите ваше имя</label>
             </div>
             <div class="form-floating">
-                <input type="text" class="form-control mb-2 w-50" id="floatingPassword5" placeholder="surname" v-model="$store.state.surname" />
+                <input
+                    type="text"
+                    class="form-control mb-2 w-50"
+                    id="floatingPassword5"
+                    placeholder="surname"
+                    v-model="$store.state.surname"
+                />
                 <label for="floatingPassword5">Введите вашу фамилию</label>
             </div>
             <div class="form-floating">
-                <input type="text" class="form-control mb-2 w-50" id="floatingPassword6" placeholder="surname" v-model="$store.state.email" />
+                <input
+                    type="text"
+                    class="form-control mb-2 w-50"
+                    id="floatingPassword6"
+                    placeholder="surname"
+                    v-model="$store.state.email"
+                />
                 <label for="floatingPassword6">Введите ваш email</label>
             </div>
             <div class="form-check mb-2">
                 <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" v-model="$store.state.rules" />
-                <label class="form-check-label" for="flexCheckDefault">Согласен с <router-link to="/rules">политикой конфиденциальности</router-link></label>
+                <label class="form-check-label" for="flexCheckDefault"
+                    >Согласен с <router-link to="/rules">политикой конфиденциальности</router-link></label
+                >
             </div>
             <button class="btn btn-lg btn-primary w-50" type="submit">Зарегистрироваться</button>
         </form>
@@ -64,13 +90,22 @@ export default {
                                         this.$store.commit("showModal", "Согласитесь с правилами регистрации");
                                     }
                                 } else {
-                                    this.$store.commit("showModal", "Адрес электронной почты должен написан в соответствии с этой маской XXX@XXX.XXX (количество «X» не важно).");
+                                    this.$store.commit(
+                                        "showModal",
+                                        "Адрес электронной почты должен написан в соответствии с этой маской XXX@XXX.XXX (количество «X» должно быть более двух)."
+                                    );
                                 }
                             } else {
-                                this.$store.commit("showModal", "Фамилия должна состоять только из русских букв и быть длиной более одного символа.");
+                                this.$store.commit(
+                                    "showModal",
+                                    "Фамилия должна состоять только из русских букв и быть длиной более одного символа."
+                                );
                             }
                         } else {
-                            this.$store.commit("showModal", "Имя должно состоять только из русских букв и быть длиной более одного символа.");
+                            this.$store.commit(
+                                "showModal",
+                                "Имя должно состоять только из русских букв и быть длиной более одного символа."
+                            );
                         }
                     } else {
                         this.$store.commit("showModal", "Введенные пароли не совпадают.");
@@ -79,7 +114,10 @@ export default {
                     this.$store.commit("showModal", "Пароль должен состоять как минимум из 6 символов.");
                 }
             } else {
-                this.$store.commit("showModal", "Логин должен состоять только из английских букв, цифр или знака подчеркивания, длиннее двух символов.");
+                this.$store.commit(
+                    "showModal",
+                    "Логин должен состоять только из английских букв, цифр или знака подчеркивания, длиннее двух символов."
+                );
             }
         },
         handleSuccess(message) {
