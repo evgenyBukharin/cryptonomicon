@@ -26,6 +26,9 @@
                 <li class="nav-item" v-if="$store.state.userId == null">
                     <router-link class="nav-link" to="/login">Войти</router-link>
                 </li>
+                <li v-if="$store.state.userId !== null" class="nav-item">
+                    <router-link class="nav-link" to="/cabinet">Войти</router-link>
+                </li>
                 <li v-if="$store.state.userId !== null" class="nav-item cursor-pointer" @click="handleLogout">
                     <div class="nav-link">Выйти</div>
                 </li>

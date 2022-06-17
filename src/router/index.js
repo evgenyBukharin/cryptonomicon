@@ -9,6 +9,7 @@ import Admin from "../pages/Admin.vue";
 import Converter from "../pages/Converter.vue";
 import Rules from "../pages/Rules.vue";
 import NotFound from "../pages/404.vue";
+import Cabinet from "../pages/Cabinet.vue";
 
 const routes = [
     {
@@ -87,6 +88,15 @@ const routes = [
         path: "/rules",
         name: "Rules",
         component: Rules,
+        meta: {
+            enterClass: "animate__animated animate__fast animate__fadeInRight",
+            leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
+        },
+    },
+    {
+        path: "/cabinet",
+        name: "Cabinet",
+        component: Cabinet,
         meta: {
             enterClass: "animate__animated animate__fast animate__fadeInRight",
             leaveClass: "animate__animated animate__fast animate__fadeOutLeft",
