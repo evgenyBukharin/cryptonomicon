@@ -57,6 +57,9 @@ export default createStore({
         // modal
         showModal: false,
         modalText: "Текст уведомления",
+
+        // walletDetails
+        walletDetailsDependence: "USD",
     },
     mutations: {
         addNewDependence(state) {
@@ -260,7 +263,7 @@ export default createStore({
         },
         async getGraphData({ commit, state }) {
             const f = await fetch(
-                `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${router.currentRoute.value.params.walletName}&tsym=USD&limit=${state.currentLimit}`
+                `https://min-api.cryptocompare.com/data/v2/histoday?fsym=${router.currentRoute.value.params.walletName}&tsym=${state.walletDetailsDependence}&limit=${state.currentLimit}`
             );
             const data = await f.json();
             commit("getGraphData", data);

@@ -1,13 +1,21 @@
 <template>
     <div class="page container">
         <div class="d-flex align-items-center mb-2">
-            <h1 class="mb-0">Данные о {{ this.$route.params.walletName }}</h1>
-            <img
-                v-if="this.$store.state.walletData.ImageUrl !== undefined"
-                class="ms-2"
-                style="width: 40px; height: 40px"
-                v-bind:src="'https://www.cryptocompare.com' + this.$store.state.walletData.ImageUrl"
-            />
+            <h1 class="wallet-details__title mb-0">
+                Данные о {{ this.$route.params.walletName }}
+                <img
+                    v-if="this.$store.state.walletData.ImageUrl !== undefined"
+                    class="wallet-details__image"
+                    style="width: 40px; height: 40px"
+                    v-bind:src="'https://www.cryptocompare.com' + this.$store.state.walletData.ImageUrl"
+                />
+                относительно
+                <select class="form-select form-select-lg w-15 ms-2" v-model="$store.state.walletDetailsDependence">
+                    <option v-for="(wallet, i) in $store.state.walletList" :key="i" :value="wallet">
+                        {{ wallet }}
+                    </option></select
+                ><Add-dependence />
+            </h1>
         </div>
         <p class="card-text">
             <span v-if="this.$store.state.walletData.AssetLaunchDate" class="d-block"
@@ -41,8 +49,9 @@
 </template>
 <script>
 import WalletGraph from "../components/WalletGraph.vue";
+import AddDependence from "../components/AddDependence.vue";
 export default {
-    components: { WalletGraph },
+    components: { WalletGraph, AddDependence },
     methods: {
         updateGraphData() {
             if (this.$store.state.currentLimit > 2000) {
@@ -74,6 +83,18 @@ export default {
     }
     &-text {
         margin-bottom: 0;
+    }
+}
+
+.wallet-details {
+    &__title {
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    &__image {
+        margin-left: 6px;
+        margin-right: 6px;
     }
 }
 </style>

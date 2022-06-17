@@ -45,7 +45,7 @@ export default {
             if (this.$store.state.walletList.findIndex((wallet) => wallet == this.$store.state.newDependence) == -1) {
                 this.$store.commit("addNewDependence");
             } else {
-                this.$store.commit("showModal", "Введенная валюта уже добавлена в список зависимостей.");
+                this.$store.commit("showModal", "Введенное название валюты уже добавлено в список зависимостей.");
             }
             this.$store.commit("clearNewDependence");
         },
