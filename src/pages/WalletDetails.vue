@@ -86,7 +86,7 @@ export default {
 }
 
 .wallet-details__title {
-    width: fill-available;
+    width: stretch;
     &-container {
         display: flex;
         align-items: center;
