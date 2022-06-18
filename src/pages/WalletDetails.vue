@@ -1,15 +1,22 @@
 <template>
     <div class="page container">
         <div class="d-flex align-items-center mb-2">
-            <h1 class="mb-0">Данные о {{ this.$route.params.walletName }}</h1>
-            <img
+            <div class="wallet-details__title-container">
+                <h1 class="mb-0 wallet-details__title">Данные о {{ this.$route.params.walletName }} относительно</h1>
+                <select class="form-select form-select-lg w-15 ms-1 me-2" v-model="$store.state.walletDeatilsDependence">
+                    <option v-for="(wallet, i) in $store.state.walletList" :key="i" :value="wallet">
+                        {{ wallet }}
+                    </option></select
+                ><Add-dependence />
+            </div>
+            <!-- <img
                 v-if="this.$store.state.walletData.ImageUrl !== undefined"
                 class="ms-2"
                 style="width: 40px; height: 40px"
                 v-bind:src="'https://www.cryptocompare.com' + this.$store.state.walletData.ImageUrl"
-            />
+            /> -->
         </div>
-        <p class="card-text">
+        <!-- <p class="card-text">
             <span v-if="this.$store.state.walletData.AssetLaunchDate" class="d-block"
                 >Дата создания валюты: {{ this.$store.state.walletData.AssetLaunchDate }}</span
             >
@@ -22,8 +29,8 @@
             <span v-if="this.$store.state.walletData.Rating" class="d-block"
                 >Оценка адаптивности к различным алгоритмам: {{ this.$store.state.walletData.Rating.Weiss.TechnologyAdoptionRating }}</span
             >
-        </p>
-        <div class="d-flex align-items-center">
+        </p> -->
+        <div class="d-flex align-items-center mt-3">
             <h4 class="converter__subtitle me-2">Изменить промежуток на последние</h4>
             <input
                 @input="(event) => validateCurrentLimit(event)"
@@ -41,8 +48,9 @@
 </template>
 <script>
 import WalletGraph from "../components/WalletGraph.vue";
+import AddDependence from "../components/AddDependence.vue";
 export default {
-    components: { WalletGraph },
+    components: { WalletGraph, AddDependence },
     methods: {
         updateGraphData() {
             if (this.$store.state.currentLimit > 2000) {
@@ -74,6 +82,14 @@ export default {
     }
     &-text {
         margin-bottom: 0;
+    }
+}
+
+.wallet-details__title {
+    width: fill-available;
+    &-container {
+        display: flex;
+        align-items: center;
     }
 }
 </style>
