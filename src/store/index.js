@@ -58,6 +58,11 @@ export default createStore({
         // modal
         showModal: false,
         modalText: "Текст уведомления",
+
+        // cabinet
+        loginConf: "",
+        newPassword: "",
+        disableChangeBtn: false,
     },
     mutations: {
         addNewDependence(state) {
@@ -210,6 +215,7 @@ export default createStore({
             } else {
                 state.walletData = data.Data[router.currentRoute.value.params.walletName];
             }
+            console.log(state.walletData == undefined);
         },
         fakeSelectedTicker(state) {
             state.selectedTicker = "fake";
@@ -249,6 +255,9 @@ export default createStore({
         },
         clearNewDependence(state) {
             state.newDependence = "";
+        },
+        disableChangeBtn(state) {
+            state.disableChangeBtn = true;
         },
     },
     actions: {

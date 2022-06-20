@@ -94,6 +94,9 @@ export default {
             return Math.ceil(this.$store.state.topWalletsListLength / this.$store.state.walletsPerPage);
         },
     },
+    mounted() {
+        this.$store.commit("updateUserId", localStorage.getItem("userId"));
+    },
 };
 </script>
 <style lang="scss">

@@ -2,35 +2,35 @@
     <div class="page container">
         <div class="d-flex align-items-center mb-2">
             <div class="wallet-details__title-container">
-                <h1 class="mb-0 wallet-details__title">Данные о {{ this.$route.params.walletName }} относительно</h1>
-                <select class="form-select form-select-lg w-15 ms-1 me-2" v-model="$store.state.walletDeatilsDependence">
+                <h1 class="mb-0 wallet-details__title">Данные о {{ $route.params.walletName }} относительно</h1>
+                <select class="form-select form-select-lg w-15 ms-1 me-2" v-model="$store.state.walletDetailsDependence">
                     <option v-for="(wallet, i) in $store.state.walletList" :key="i" :value="wallet">
                         {{ wallet }}
                     </option></select
                 ><Add-dependence />
             </div>
-            <!-- <img
-                v-if="this.$store.state.walletData.ImageUrl !== undefined"
+            <img
+                v-if="$store.state.walletData !== undefined"
                 class="ms-2"
                 style="width: 40px; height: 40px"
-                v-bind:src="'https://www.cryptocompare.com' + this.$store.state.walletData.ImageUrl"
-            /> -->
+                :src="'https://www.cryptocompare.com' + $store.state.walletData?.ImageUrl"
+            />
         </div>
-        <!-- <p class="card-text">
-            <span v-if="this.$store.state.walletData.AssetLaunchDate" class="d-block"
-                >Дата создания валюты: {{ this.$store.state.walletData.AssetLaunchDate }}</span
+        <p class="card-text" v-if="$store.state.walletData !== undefined">
+            <span v-if="$store.state.walletData.AssetLaunchDate" class="d-block"
+                >Дата создания валюты: {{ $store.state.walletData.AssetLaunchDate }}</span
             >
-            <span v-if="this.$store.state.walletData.Algorithm" class="d-block"
-                >Валюта хэшируется с помощью алгоритма {{ this.$store.state.walletData.Algorithm }}</span
+            <span v-if="$store.state.walletData.Algorithm" class="d-block"
+                >Валюта хэшируется с помощью алгоритма {{ $store.state.walletData.Algorithm }}</span
             >
-            <span v-if="this.$store.state.walletData.TotalCoinsMined" class="d-block"
+            <span v-if="$store.state.walletData.TotalCoinsMined" class="d-block"
                 >Всего добыто {{ this.$store.state.walletData.TotalCoinsMined }} единиц валюты</span
             >
-            <span v-if="this.$store.state.walletData.Rating" class="d-block"
-                >Оценка адаптивности к различным алгоритмам: {{ this.$store.state.walletData.Rating.Weiss.TechnologyAdoptionRating }}</span
+            <span v-if="$store.state.walletData.Rating" class="d-block"
+                >Оценка адаптивности к различным алгоритмам: {{ $store.state.walletData.Rating.Weiss.TechnologyAdoptionRating }}</span
             >
-        </p> -->
-        <div class="d-flex align-items-center mt-3">
+        </p>
+        <div class="d-flex align-items-center">
             <h4 class="converter__subtitle me-2">Изменить промежуток на последние</h4>
             <input
                 @input="(event) => validateCurrentLimit(event)"
@@ -66,6 +66,9 @@ export default {
         this.$store.dispatch("getGraphData");
         this.$store.dispatch("getWalletData");
         this.$store.commit("fakeSelectedTicker");
+    },
+    mounted() {
+        this.$store.commit("updateUserId", localStorage.getItem("userId"));
     },
 };
 </script>

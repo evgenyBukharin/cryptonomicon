@@ -11,6 +11,10 @@
     </div>
 </template>
 <script>
-export default {};
+export default {
+    mounted() {
+        this.$store.commit("updateUserId", localStorage.getItem("userId"));
+    },
+};
 </script>
 <style lang="scss"></style>

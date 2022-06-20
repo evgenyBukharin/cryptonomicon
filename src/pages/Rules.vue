@@ -63,7 +63,13 @@
         </p>
     </div>
 </template>
-<script></script>
+<script>
+export default {
+    mounted() {
+        this.$store.commit("updateUserId", localStorage.getItem("userId"));
+    },
+}
+</script>
 <style lang="scss">
 .text-indent-30 {
     text-indent: 30px;

@@ -27,7 +27,7 @@
                     <router-link class="nav-link" to="/login">Войти</router-link>
                 </li>
                 <li v-if="$store.state.userId !== null" class="nav-item">
-                    <router-link class="nav-link" to="/cabinet">Войти</router-link>
+                    <router-link class="nav-link" to="/cabinet">Личный кабинет</router-link>
                 </li>
                 <li v-if="$store.state.userId !== null" class="nav-item cursor-pointer" @click="handleLogout">
                     <div class="nav-link">Выйти</div>
@@ -62,6 +62,7 @@ export default {
             this.$store.state.tickers.forEach((t) => {
                 this.$store.commit("subscribeOnUpdates", t);
             });
+            this.$store.commit("showModal", "Вы успешно вышли из аккаунта.");
             this.$store.commit("setSelectedTicker", null);
             this.$router.push("/");
         },

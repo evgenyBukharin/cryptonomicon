@@ -92,7 +92,7 @@ export default {
                                 } else {
                                     this.$store.commit(
                                         "showModal",
-                                        "Адрес электронной почты должен написан в соответствии с этой маской XXX@XXX.XXX (количество «X» должно быть более двух)."
+                                        "Адрес электронной почты должен написан в соответствии с этой маской XXX@XXX.XXX (количество «X» должно быть более двух и только латинские буквы после точки)."
                                     );
                                 }
                             } else {
@@ -128,6 +128,9 @@ export default {
                 this.$store.commit("showModal", message);
             }
         },
+    },
+    mounted() {
+        this.$store.commit("updateUserId", localStorage.getItem("userId"));
     },
 };
 </script>

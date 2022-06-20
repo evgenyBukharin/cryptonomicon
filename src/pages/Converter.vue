@@ -22,10 +22,16 @@
                         class="w-100 h-80 border-0 outline-0 fs-1 text-center converter__values"
                         v-model="$store.state.firstMultiplyed"
                     />
-                    <h5 class="m-0">1 {{ $store.state.firstWallet + " = " + $store.state.secondWalletCourse + " " + $store.state.secondWallet }}</h5>
+                    <h5 class="m-0">
+                        1 {{ $store.state.firstWallet + " = " + $store.state.secondWalletCourse + " " + $store.state.secondWallet }}
+                    </h5>
                 </div>
             </div>
-            <div class="converter__transfer col-2 mx-4 mt-4 order-2 cursor-pointer" @click="$store.commit('swapData')" style="width: 80px"></div>
+            <div
+                class="converter__transfer col-2 mx-4 mt-4 order-2 cursor-pointer"
+                @click="$store.commit('swapData')"
+                style="width: 80px"
+            ></div>
             <div class="d-flex flex-wrap order-3">
                 <div class="d-flex align-items-center">
                     <h4 class="me-2">Хочу купить</h4>
@@ -46,7 +52,9 @@
                         class="w-100 h-80 border-0 outline-0 fs-1 text-center converter__values"
                         v-model="$store.state.secondMultiplyed"
                     />
-                    <h5 class="m-0">1 {{ $store.state.secondWallet + " = " + $store.state.firstWalletCourse + " " + $store.state.firstWallet }}</h5>
+                    <h5 class="m-0">
+                        1 {{ $store.state.secondWallet + " = " + $store.state.firstWalletCourse + " " + $store.state.firstWallet }}
+                    </h5>
                 </div>
             </div>
         </div>
@@ -65,6 +73,9 @@ export default {
         },
         changeWalletsChoise() {
             this.$store.dispatch("setConverterData");
+        },
+        mounted() {
+            this.$store.commit("updateUserId", localStorage.getItem("userId"));
         },
     },
     async created() {

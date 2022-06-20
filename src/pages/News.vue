@@ -71,6 +71,9 @@ export default {
             clearInterval(this.intervalId);
         },
     },
+    mounted() {
+        this.$store.commit("updateUserId", localStorage.getItem("userId"));
+    },
 };
 </script>
 <style lang="scss">
