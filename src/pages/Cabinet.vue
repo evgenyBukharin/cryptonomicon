@@ -3,14 +3,20 @@
         <form class="w-30" @submit.prevent="handlePassChange()">
             <h1 class="h3 mb-3 fw-normal">Форма изменения пароля</h1>
             <div class="form-floating">
-                <input type="text" class="form-control mb-2" id="floatingInput" placeholder="Ваш логин" v-model="$store.state.loginConf" />
+                <input
+                    type="text"
+                    class="form-control mb-2"
+                    id="floatingInputCabinet"
+                    placeholder="Ваш логин"
+                    v-model="$store.state.loginConf"
+                />
                 <label for="floatingInput">Введите ваш логин</label>
             </div>
             <div class="form-floating">
                 <input
                     type="password"
                     class="form-control mb-2"
-                    id="floatingPassword"
+                    id="floatingPasswordCabinet"
                     placeholder="Password"
                     v-model="$store.state.newPassword"
                 />
@@ -46,6 +52,12 @@ export default {
     },
     mounted() {
         this.$store.commit("updateUserId", localStorage.getItem("userId"));
+    },
+    created() {
+        if (localStorage.getItem("userId") == null) {
+            this.$router.push("/login");
+            this.$store.commit("showModal", "Сначала войдите в аккаунт.");
+        }
     },
 };
 </script>
