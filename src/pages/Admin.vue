@@ -52,17 +52,6 @@ export default {
                 this.users.push(user);
             });
         },
-        changeRole(setUserId, setRole) {
-            this.users.find((user) => user.id == setUserId).role = setRole;
-            axios
-                .post("../php/updateRole.php", {
-                    userId: setUserId,
-                    role: setRole,
-                })
-                .then(() => {
-                    this.$store.commit("showModal", "Роль успешно изменена.");
-                });
-        },
         deleteUser(deleteUserId) {
             console.log(this.users, deleteUserId);
             axios
