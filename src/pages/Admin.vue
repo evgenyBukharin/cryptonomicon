@@ -71,11 +71,12 @@ export default {
     },
     mounted() {
         if (this.$store.state.userId == 1) {
+            this.$store.commit("updateUserId", localStorage.getItem("userId"));
             this.getData();
         } else {
+            this.$store.commit("showModal", "У вас нет прав администратора для доступа к этой странице.");
             this.$router.push("/");
         }
-        this.$store.commit("updateUserId", localStorage.getItem("userId"));
     },
 };
 </script>
