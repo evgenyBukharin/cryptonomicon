@@ -68,7 +68,7 @@ export default createStore({
         addNewDependence(state) {
             state.walletList.push(state.newDependence);
         },
-        filterInputHangle(state) {
+        filterInputHandle(state) {
             state.filter = state.filter.toUpperCase();
             state.page = 1;
         },
