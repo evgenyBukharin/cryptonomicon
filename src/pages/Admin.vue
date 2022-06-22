@@ -70,8 +70,8 @@ export default {
         },
     },
     mounted() {
+        this.$store.commit("updateUserId", localStorage.getItem("userId"));
         if (this.$store.state.userId == 1) {
-            this.$store.commit("updateUserId", localStorage.getItem("userId"));
             this.getData();
         } else {
             this.$store.commit("showModal", "У вас нет прав администратора для доступа к этой странице.");
